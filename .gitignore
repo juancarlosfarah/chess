@@ -1,0 +1,18 @@
+# Object Files
+# ============
+*.o
+
+# Generated Files
+# ===============
+*.d
+
+# Binaries
+# ========
+chess
+test
+
+# Swap Files
+# ==========
+\#*\#
+*.swp
+
