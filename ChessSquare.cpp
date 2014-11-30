@@ -8,6 +8,10 @@
 
 // Constructor:
 // ============
+ChessSquare::ChessSquare() {}
+
+// Constructor:
+// ============
 ChessSquare::ChessSquare(string coords)
                          throw(InvalidCoordinatesException&) {
 
@@ -24,17 +28,33 @@ ChessSquare::ChessSquare(string coords)
     }
 }
 
+// Constructor:
+// ============
+// This constructor takes a char file and an int rank and constructs
+// the respective ChessSquare object. If the arguments are invalid,
+// it throws an InvalidCoordinatesException.
+ChessSquare::ChessSquare(char file, int rank)
+                         throw(InvalidCoordinatesException&) {
+
+    if (isValidFile(file) && isValidRank(rank)) {
+        this->file = file;
+        this->rank = rank;
+    } else {
+        throw InvalidCoordinatesException();
+    }
+}
+
 // Public Method: getFile
 // ======================
 // Returns the file property of this ChessSquare.
-char ChessSquare::getFile() {
+char ChessSquare::getFile() const {
     return this->file;
 }
 
 // Public Method: getRank
 // ======================
 // Returns the rank property of this ChessSquare.
-int ChessSquare::getRank() {
+int ChessSquare::getRank() const {
     return this->rank;
 }
 
@@ -44,7 +64,7 @@ int ChessSquare::getRank() {
 // for a file, i.e. if it is a letter between A and H, inclusive.
 // This method is case insensitive.
 bool ChessSquare::isValidFile(char file) {
-    return false;
+    return (file >= 65 && file <= 72);  //TODO: Make case insensitive!
 }
 
 // Private Method: isValidRank
@@ -53,4 +73,19 @@ bool ChessSquare::isValidFile(char file) {
 // for a file, i.e. if it is an integer between 1 and 8, inclusive.
 bool ChessSquare::isValidRank(char rank) {
     return false;
+}
+
+// Private Method: isValidRank
+// ===========================
+// Takes an int and returns a bool indicating if it is a valid symbol
+// for a file, i.e. if it is an integer between 1 and 8, inclusive.
+bool ChessSquare::isValidRank(int rank) {
+    return (rank >= 1 && rank <= 8);
+}
+
+// Operator: <
+// ===========
+bool ChessSquare::operator<(const ChessSquare& other) const {
+    return (this->rank > other.rank) ||
+           ((this->rank == other.rank) && (this->file < other.file));
 }

@@ -2,6 +2,7 @@
 #define CHESS_BOARD_HPP
 
 #include <iostream>
+#include <utility>
 #include <map>
 using namespace std;
 
@@ -9,16 +10,29 @@ using namespace std;
 #include "ChessPiece.hpp"
 #include "ChessSquare.hpp"
 
+// Type: Position
+// ==============
+typedef pair<ChessSquare, ChessPiece*> Position;
+
+
 class ChessBoard {
 
     private:
 
         ChessSet pieces;        
-        map<ChessSquare, ChessPiece> board;
+        map<ChessSquare, ChessPiece*> board;
+
+        // Method: init
+        // ============
+        void init();
 
         // Method: arrange
         // ===============
         void arrange();
+
+        // Method: arrangeSide
+        // ===================
+        void arrangeSide(Color color);
 
     public:
 
@@ -34,10 +48,21 @@ class ChessBoard {
         // ==================
         void resetBoard();
    
+        // Method: getBoard
+        // ================
+        map<ChessSquare, ChessPiece*> getBoard();
+
+        // Method: print
+        // =============
+        void print();
+
+        // Method: getChessSet
+        // ===================
+        ChessSet getChessSet();
+
         // Operator: <<
         // ============
         friend ostream& operator<<(ostream& os, ChessBoard cb);
 };
-
 
 #endif

@@ -16,14 +16,37 @@ enum Color {White, Black};
 
 class ChessPiece {
     
-    private:
+    protected:
+
         Color color;
+        ChessSquare* position;
 
     public:
 
-        // Constructor: Default
-        // ====================
+        // Constructor:
+        // ============
         ChessPiece();
+        ChessPiece(Color color);
+        ChessPiece(Color color, ChessSquare* position);
+
+        // Method: setPosition
+        // ===================
+        // Takes a ChessSquare and sets it as the position
+        // attribute of this ChessPiece.
+        void setPosition(ChessSquare* cs);
+
+        // Method: getPosition
+        // ===================
+        // Returns the position attribute of this ChessPiece.
+        ChessSquare* getPosition();
+
+        // Method: print
+        // =============
+        virtual void print();
+
+        // Operator: <<
+        // ============
+        friend ostream& operator<<(ostream& os, ChessPiece cp);
 };
 
 #endif
