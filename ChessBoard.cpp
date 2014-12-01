@@ -10,6 +10,10 @@ ChessBoard::ChessBoard() {
     this->arrange();
 }
 
+// Destructor:
+// ===========
+ChessBoard::~ChessBoard() {}
+
 // Private Method: init
 // ====================
 void ChessBoard::init() {
@@ -61,6 +65,31 @@ void ChessBoard::arrangeSide(Color color) {
 // =========================
 //
 bool ChessBoard::submitMove(string source, string destination) {
+    ChessSquare sourceSquare = ChessSquare(source);
+    BoardIterator i = this->board.find(sourceSquare);
+    // Return false and notify client if
+    // the square is not in the board.
+    if (i == this->board.end()) {
+        cerr << "Invalid move." << endl;
+        return false;
+    }
+    // Get chess piece at source square.
+    ChessPiece* piece = i->second;
+    ChessSquare destinationSquare = ChessSquare(destination);
+    i = this->board.find(destinationSquare);
+    if (i == this->board.end()) {
+        cerr << "Invalid move." << endl;
+        return false;
+    }
+    if (piece->isValidMove(destinationSquare)) {
+        //cout << destinationSquare << endl;
+        this->board[destinationSquare] = piece;
+        this->board[sourceSquare] = nullptr;
+        //cout << "Set new piece!" << endl;
+        piece->setPosition(&(i->first));
+        return true;
+    }
+
     return false;
 }
 
@@ -87,12 +116,12 @@ ostream& operator<<(ostream& os, ChessBoard cb) {
 // ====================
 void ChessBoard::print() {
     cout << "---------------------------------" << endl;
-    map<ChessSquare, ChessPiece*>::iterator i = this->board.begin();
     int count = 0;
+    map<ChessSquare, ChessPiece*>::iterator i = this->board.begin();
     while (i != this->board.end()) {
         cout << "| ";
         if (i->second != nullptr) {
-            i->second->print();
+            cout << *(i->second);
         } else {
             cout << " ";
         }

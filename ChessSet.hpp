@@ -8,6 +8,7 @@
 #define CHESS_SET_HPP
 
 #include <array>
+#include <iostream>
 using namespace std;
 
 #include "ChessPiece.hpp"
@@ -40,6 +41,10 @@ class ChessSet {
         // Constructor: Default
         // ====================
         ChessSet();
+
+        // Destructor:
+        // ===========
+        ~ChessSet();
 
         // Method: getWhites
         // =================

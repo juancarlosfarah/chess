@@ -13,7 +13,8 @@ using namespace std;
 // Type: Position
 // ==============
 typedef pair<ChessSquare, ChessPiece*> Position;
-
+typedef map<ChessSquare, ChessPiece*> Board;
+typedef Board::iterator BoardIterator;
 
 class ChessBoard {
 
@@ -39,6 +40,10 @@ class ChessBoard {
         // Constructor: Default
         // ====================
         ChessBoard();
+
+        // Destructor:
+        // ===========
+        ~ChessBoard();
 
         // Method: submitMove
         // ==================

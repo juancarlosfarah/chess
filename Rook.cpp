@@ -11,23 +11,33 @@ using namespace std;
 
 Rook::Rook() : ChessPiece() {}
 
-Rook::Rook(Color color) : ChessPiece(color) {}
-Rook::Rook(Color color, ChessSquare* position) :
-           ChessPiece(color, position) {}
-
-// Public Method: print
-// ====================
-void Rook::print() {
-    cout << *this;
+Rook::Rook(Color color) : ChessPiece(color) {
+    this->initSymbol(color);
 }
+
+Rook::Rook(Color c, ChessSquare* cs) : ChessPiece(c, cs) {
+    this->initSymbol(c);
+}
+
+// Destructor:
+// ===========
+Rook::~Rook() {}
+
+// Private Method: initSymbol
+// ==========================
+void Rook::initSymbol(Color color) {
+    this->symbol = (color == White) ? "\u2656" : "\u265C";
+}
+
+//// Public Method: getSymbol
+//// ========================
+//string Rook::getSymbol() {
+//  return this->symbol;
+//}
 
 // Friend Operator: <<
 // ===================
 ostream& operator<<(ostream& os, Rook rook) {
-    if (rook.color == White) {
-        os << "\u2656";
-    } else {
-        os << "\u265C";
-    }
+    os << rook.symbol;
     return os;
 }

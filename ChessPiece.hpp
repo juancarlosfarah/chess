@@ -8,6 +8,7 @@
 #define CHESS_PIECE_HPP
 
 #include <iostream>
+#include <string>
 using namespace std;
 
 #include "ChessSquare.hpp"
@@ -15,11 +16,17 @@ using namespace std;
 enum Color {White, Black};
 
 class ChessPiece {
-    
+
+    private:
+        // Method: initSymbol
+        // ==================
+        void initSymbol(Color color);
+
     protected:
 
         Color color;
-        ChessSquare* position;
+        string symbol;
+        const ChessSquare* position;
 
     public:
 
@@ -29,24 +36,37 @@ class ChessPiece {
         ChessPiece(Color color);
         ChessPiece(Color color, ChessSquare* position);
 
+        // Destructor:
+        // ===========
+        virtual ~ChessPiece();
+
+
         // Method: setPosition
         // ===================
         // Takes a ChessSquare and sets it as the position
         // attribute of this ChessPiece.
-        void setPosition(ChessSquare* cs);
+        void setPosition(const ChessSquare* cs);
 
         // Method: getPosition
         // ===================
         // Returns the position attribute of this ChessPiece.
-        ChessSquare* getPosition();
+        const ChessSquare* getPosition();
 
         // Method: print
         // =============
-        virtual void print();
+        void print();
+
+        // Method: isValidMove
+        // ===================
+        virtual bool isValidMove(ChessSquare& square);
+
+        //// Method: getSymbol
+        //// =================
+        //virtual string getSymbol();
 
         // Operator: <<
         // ============
-        friend ostream& operator<<(ostream& os, ChessPiece cp);
+        friend ostream& operator<<(ostream& os, ChessPiece piece);
 };
 
 #endif

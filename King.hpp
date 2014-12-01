@@ -14,6 +14,12 @@ using namespace std;
 
 class King : public ChessPiece {
     
+    private:
+
+        // Method: initSymbol
+        // ==================
+        void initSymbol(Color color);
+
     public:
 
         // Constructor:
@@ -22,9 +28,13 @@ class King : public ChessPiece {
         King(Color color);
         King(Color color, ChessSquare* position);
 
-        // Method: print
-        // =============
-        void print();
+        // Destructor:
+        // ===========
+        ~King();
+
+        //// Method: getSymbol
+        //// =================
+        //string getSymbol();
 
         // Operator: <<
         // ============

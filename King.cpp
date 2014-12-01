@@ -11,23 +11,32 @@ using namespace std;
 
 King::King() : ChessPiece() {}
 
-King::King(Color color) : ChessPiece(color) {}
-King::King(Color color, ChessSquare* position) :
-           ChessPiece(color, position) {}
-
-// Public Method: print
-// ====================
-void King::print() {
-    cout << *this;
+King::King(Color color) : ChessPiece(color) {
+    this->initSymbol(color);
 }
+King::King(Color c, ChessSquare* cs) : ChessPiece(c, cs) {
+    this->initSymbol(c);
+}
+
+// Destructor:
+// ===========
+King::~King() {}
+
+// Private Method: initSymbol
+// ==========================
+void King::initSymbol(Color color) {
+    this->symbol = (color == White) ? "\u2654" : "\u265A";
+}
+
+//// Public Method: getSymbol
+//// ========================
+//string King::getSymbol() {
+//    return this->symbol;
+//}
 
 // Friend Operator: << 
 // ===================
 ostream& operator<<(ostream& os, King king) { 
-    if (king.color == White) {
-        os << "\u2654";
-    } else {
-        os << "\u265A";
-    }
+    os << king.symbol;
     return os;
 }

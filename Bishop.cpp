@@ -11,23 +11,32 @@ using namespace std;
 
 Bishop::Bishop() : ChessPiece() {}
 
-Bishop::Bishop(Color color) : ChessPiece(color) {}
-Bishop::Bishop(Color color, ChessSquare* position) :
-           ChessPiece(color, position) {}
-
-// Public Method: print
-// ====================
-void Bishop::print() {
-    cout << *this;
+Bishop::Bishop(Color color) : ChessPiece(color) {
+    this->initSymbol(color);
 }
+Bishop::Bishop(Color c, ChessSquare* cs) : ChessPiece(c, cs) {
+    this->initSymbol(c);
+}
+
+// Destructor:
+// ===========
+Bishop::~Bishop() {}
+
+// Private Method: initSymbol
+// ==========================
+void Bishop::initSymbol(Color color) {
+    this->symbol = (color == White) ? "\u2657" : "\u265D";
+}
+
+// Public Method: getSymbol
+// ========================
+//string Bishop::getSymbol() {
+//    return this->symbol;
+//}
 
 // Friend Operator: <<
 // ===================
 ostream& operator<<(ostream& os, Bishop bishop) {
-    if (bishop.color == White) {
-        os << "\u2657";
-    } else {
-        os << "\u265D";
-    }
+    os << bishop.symbol;
     return os;
 }

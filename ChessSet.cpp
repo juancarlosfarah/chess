@@ -6,11 +6,20 @@
 
 #include "ChessSet.hpp"
 
+// Constructor: Default
+// ====================
 ChessSet::ChessSet() {
     this->initSide(White);
     this->initSide(Black);
 }
 
+// Destructor:
+// ===========
+ChessSet::~ChessSet() {}
+
+// Private Method: initSide
+// ===============
+//
 void ChessSet::initSide(Color color) {
     for (int i = 0; i < 16; ++i) {
         char file = 65 + (i % 8);
@@ -23,7 +32,9 @@ void ChessSet::initSide(Color color) {
         ChessSquare* square = new ChessSquare(file, rank);
         ChessPiece* piece;
         if (rank == 2 || rank == 7) {
+            //cout << "Making Pawns" << endl;
             piece = new Pawn(color, square);
+            //cout << "Made Pawns" << endl;
         } else if (file == 'B' || file == 'G') {
             piece = new Knight(color, square);
         } else if (file == 'C' || file == 'F') {
@@ -37,10 +48,13 @@ void ChessSet::initSide(Color color) {
         }
         ChessSide* side = this->getSide(color);
         side->at(i) = piece;
-        // TODO: pointer?
+        // TODO: pointer. Does this make sense?
+        square = nullptr;
     }
 }
 
+// Private Method: getSide
+// =======================
 ChessSide* ChessSet::getSide(Color color) {
     if (color == White) {
         return &(this->whites);
@@ -67,13 +81,13 @@ ChessSide* ChessSet::getBlacks() {
 void ChessSet::print() {
     ChessSide::iterator i = this->whites.begin();
     while (i != this->whites.end()) {
-        (*i)->print();
+        cout << **i;
         ++i;
     }
     cout << endl;
     i = this->blacks.begin();
     while (i != this->blacks.end()) {
-        (*i)->print();
+        cout << **i;
         ++i;
     }
     cout << endl;

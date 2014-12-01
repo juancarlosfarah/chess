@@ -5,6 +5,8 @@ using namespace std;
 
 int main() {
 
+Pawn p = Pawn(White);
+cout << p << endl;
 
     ChessBoard cb;
 
@@ -46,6 +48,11 @@ int main() {
     cb.getChessSet().print();
 
     cout << "Printing board!" << endl;
+    cb.print();
+
+    cout << endl;
+    cout << "I like to move it move it!" << endl;
+    cb.submitMove("E2","E3");
     cb.print();
 
     return 0;

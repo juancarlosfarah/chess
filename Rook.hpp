@@ -13,7 +13,12 @@ using namespace std;
 #include "ChessPiece.hpp"
 
 class Rook : public ChessPiece {
-    
+
+    private:
+        // Method: initSymbol
+        // ==================
+        void initSymbol(Color color);
+
     public:
 
         // Constructor:
@@ -22,9 +27,13 @@ class Rook : public ChessPiece {
         Rook(Color color);
         Rook(Color color, ChessSquare* position);
 
-        // Method: print
-        // =============
-        void print();
+        // Destructor:
+        // ===========
+        ~Rook();
+
+        //// Method: getSymbol
+        //// =================
+        //string getSymbol();
 
         // Operator: <<
         // ============

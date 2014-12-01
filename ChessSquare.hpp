@@ -28,6 +28,7 @@ class ChessSquare {
         // inclusive. Note this method is case insensitive.
         bool isValidFile(char file);
 
+        // TODO: Eliminate!
         // Method: isValidRank
         // ===================
         // Takes a char and returns a bool indicating if it is a valid
@@ -77,6 +78,14 @@ class ChessSquare {
         // Operator: <
         // ===========
         bool operator<(const ChessSquare& other) const;
+
+        // Operator: ==
+        // ============
+        bool operator==(const ChessSquare& other) const;
+
+        // Operator: <<
+        // ============
+        friend ostream& operator<<(ostream& os, const ChessSquare square);
 };
 
 #endif

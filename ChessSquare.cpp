@@ -4,6 +4,10 @@
 // Email:   juancarlos.farah14@imperial.ac.uk
 // ==========================================
 
+#include <cctype>
+#include <iostream>
+using namespace std;
+
 #include "ChessSquare.hpp"
 
 // Constructor:
@@ -16,13 +20,13 @@ ChessSquare::ChessSquare(string coords)
                          throw(InvalidCoordinatesException&) {
 
     char file = coords[0];
-    char rank = coords[1];
+    int rank = coords[1] - '0';
 
     // Parse the first and second characters in the string and ensure
     // that they are valid. If so set the properties accordingly.
     if (isValidFile(file) && isValidRank(rank)) {
         this->file = file;
-        this->rank = static_cast<int>(rank);
+        this->rank = rank;
     } else {
         throw InvalidCoordinatesException();
     }
@@ -67,12 +71,15 @@ bool ChessSquare::isValidFile(char file) {
     return (file >= 65 && file <= 72);  //TODO: Make case insensitive!
 }
 
+// TODO: Eliminate!
 // Private Method: isValidRank
 // ===========================
 // Takes a char and returns a bool indicating if it is a valid symbol
 // for a file, i.e. if it is an integer between 1 and 8, inclusive.
 bool ChessSquare::isValidRank(char rank) {
-    return false;
+    if (!isdigit(rank)) return false;
+    int rankAsInt = rank - '0';
+    return isValidRank(rankAsInt);
 }
 
 // Private Method: isValidRank
@@ -88,4 +95,17 @@ bool ChessSquare::isValidRank(int rank) {
 bool ChessSquare::operator<(const ChessSquare& other) const {
     return (this->rank > other.rank) ||
            ((this->rank == other.rank) && (this->file < other.file));
+}
+
+// Operator: ==
+// ============
+bool ChessSquare::operator==(const ChessSquare& other) const {
+    return ((this->rank == other.rank) && (this->file == other.file));
+}
+
+// Friend Operator: <<
+// ===================
+ostream& operator<<(ostream& os, const ChessSquare square) {
+    os << square.file << square.rank;
+    return os;
 }
