@@ -5,7 +5,7 @@ TEST_OBJ = $(COMMON_OBJ) Test.o
 EXE = chess
 TEST = test
 INC = *.d
-OBJ = *.0
+OBJ = *.o
 GCC = g++
 CFLAGS = -Wall -g -MMD -std=c++11
 
