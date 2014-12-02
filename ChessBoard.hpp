@@ -35,6 +35,18 @@ class ChessBoard {
         // ===================
         void arrangeSide(Color color);
 
+        // Method: printTopLine
+        // ====================
+        void printTopLine();
+
+        // Method: printMiddleLine
+        // =======================
+        void printMiddleLine();
+
+        // Method: printBottomLine
+        // =======================
+        void printBottomLine();
+
     public:
 
         // Constructor: Default

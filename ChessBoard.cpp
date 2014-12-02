@@ -112,14 +112,14 @@ ostream& operator<<(ostream& os, ChessBoard cb) {
     return os;
 }
 
-// Public Method: Print
+// Public Method: print
 // ====================
 void ChessBoard::print() {
-    cout << "---------------------------------" << endl;
+    this->printTopLine();
     int count = 0;
     map<ChessSquare, ChessPiece*>::iterator i = this->board.begin();
     while (i != this->board.end()) {
-        cout << "| ";
+        cout << "\u2502 ";
         if (i->second != nullptr) {
             cout << *(i->second);
         } else {
@@ -127,12 +127,48 @@ void ChessBoard::print() {
         }
         cout << " ";
         ++count;
-        if (count % 8 == 0) {
-            cout << "|" << endl;
-            cout << "---------------------------------" << endl;
+        if (count % 8 == 0 && count < 64) {
+            this->printMiddleLine();
         }
         ++i;
     }
+    this->printBottomLine();
+}
+
+
+// Private Method: printMiddleLine
+// ===============================
+void ChessBoard::printTopLine() {
+    cout << "\u250C";
+    for (short int i = 1; i <= 8; ++i) {
+        cout << "\u2500\u2500\u2500";
+        if (i != 8) cout << "\u252C";
+    }
+    cout << "\u2510" << endl;
+}
+
+// Private Method: printMiddleLine
+// ===============================
+void ChessBoard::printMiddleLine() {
+    cout << "\u2502" << endl;
+    cout << "\u251C";
+    for (short int i = 1; i <= 8; ++i) {
+        cout << "\u2500\u2500\u2500";
+        if (i != 8) cout << "\u253C";
+    }
+    cout << "\u2524" << endl;
+}
+
+// Private Method: printBottomLine
+// ===============================
+void ChessBoard::printBottomLine() {
+    cout << "\u2502" << endl;
+    cout << "\u2514";
+    for (short int i = 1; i <= 8; ++i) {
+        cout << "\u2500\u2500\u2500";
+        if (i != 8) cout << "\u2534";
+    }
+    cout << "\u2518" << endl;
 }
 
 // Method: getChessSet
