@@ -26,7 +26,7 @@ class King : public ChessPiece {
         // ============
         King();
         King(Color color);
-        King(Color color, ChessSquare* position);
+        King(Color color, ChessSquare* square);
 
         // Destructor:
         // ===========

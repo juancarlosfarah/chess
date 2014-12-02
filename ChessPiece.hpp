@@ -26,7 +26,7 @@ class ChessPiece {
 
         Color color;
         string symbol;
-        const ChessSquare* position;
+        const ChessSquare* square;
 
     public:
 
@@ -34,23 +34,23 @@ class ChessPiece {
         // ============
         ChessPiece();
         ChessPiece(Color color);
-        ChessPiece(Color color, ChessSquare* position);
+        ChessPiece(Color color, ChessSquare* square);
 
         // Destructor:
         // ===========
         virtual ~ChessPiece();
 
 
-        // Method: setPosition
+        // Method: setSquare
         // ===================
-        // Takes a ChessSquare and sets it as the position
+        // Takes a ChessSquare and sets it as the square
         // attribute of this ChessPiece.
-        void setPosition(const ChessSquare* cs);
+        void setSquare(const ChessSquare* cs);
 
-        // Method: getPosition
+        // Method: getSquare
         // ===================
-        // Returns the position attribute of this ChessPiece.
-        const ChessSquare* getPosition();
+        // Returns the square attribute of this ChessPiece.
+        const ChessSquare* getSquare();
 
         // Method: print
         // =============

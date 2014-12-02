@@ -54,7 +54,7 @@ void ChessBoard::arrangeSide(Color color) {
     while (i != side->end()) {
         
         //TODO: Figure out the pointer stuff.
-        ChessSquare square = *((*i)->getPosition());
+        ChessSquare square = *((*i)->getSquare());
         this->board[square] = *i;
         ++i;
     }
@@ -86,7 +86,7 @@ bool ChessBoard::submitMove(string source, string destination) {
         this->board[destinationSquare] = piece;
         this->board[sourceSquare] = nullptr;
         //cout << "Set new piece!" << endl;
-        piece->setPosition(&(i->first));
+        piece->setSquare(&(i->first));
         return true;
     }
 

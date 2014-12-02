@@ -26,7 +26,7 @@ class Knight : public ChessPiece {
         // ============
         Knight();
         Knight(Color color);
-        Knight(Color color, ChessSquare* position);
+        Knight(Color color, ChessSquare* square);
 
         // Destructor:
         // ===========

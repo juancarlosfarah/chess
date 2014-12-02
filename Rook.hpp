@@ -25,7 +25,7 @@ class Rook : public ChessPiece {
         // ============
         Rook();
         Rook(Color color);
-        Rook(Color color, ChessSquare* position);
+        Rook(Color color, ChessSquare* square);
 
         // Destructor:
         // ===========

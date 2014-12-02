@@ -26,7 +26,7 @@ class Bishop : public ChessPiece {
         // ============
         Bishop();
         Bishop(Color color);
-        Bishop(Color color, ChessSquare* position);
+        Bishop(Color color, ChessSquare* square);
 
         // Destructor:
         // ===========

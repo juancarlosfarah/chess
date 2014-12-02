@@ -26,7 +26,7 @@ class Pawn : public ChessPiece {
         // ============
         Pawn();
         Pawn(Color color);
-        Pawn(Color color, ChessSquare* position);
+        Pawn(Color color, ChessSquare* square);
 
         // Destructor:
         // ===========
