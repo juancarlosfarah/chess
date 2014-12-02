@@ -16,3 +16,6 @@ test
 \#*\#
 *.swp
 
+# Sed Files
+# =========
+*.nfs*
