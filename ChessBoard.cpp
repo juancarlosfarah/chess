@@ -9,6 +9,7 @@ using namespace std;
 ChessBoard::ChessBoard() {
     this->init();
     this->arrange();
+    this->startGame();
 }
 
 // Destructor:
@@ -63,6 +64,35 @@ void ChessBoard::arrangeSide(Color color) {
     }
 }
 
+// Private Method: startGame
+// =========================
+// This method ensures that the properties of the ChessBoard are
+// ready for a game of chess.
+void ChessBoard::startGame() {
+    this->turn = White;
+    cout << "A new chess game is started!" << endl;
+    cout << endl;
+}
+
+// Private Method: switchTurns
+// ===========================
+// This method changes the turn property of the ChessBoard
+// to the Color of the player whose turn it is to move next.
+void ChessBoard::switchTurns() {
+    switch (this->turn) {
+        case White:
+            this->turn = Black;
+            break;
+        case Black:
+            this->turn = White;
+            break;
+        default:
+            cerr << "WARNING! The turn property of this "
+                 << "ChessBoard is not set properly. "
+                 << "Setting it by default to White." << endl;
+            this->turn = White;
+    }
+}
 
 // Public Method: submitMove
 // =========================
@@ -78,6 +108,15 @@ bool ChessBoard::submitMove(string source, string destination) {
     }
     // Get chess piece at source square.
     ChessPiece* sourcePiece = i->second;
+
+    // If the piece in the source square is not of the same color as
+    // the player whose turn it is to play, notify and return false.
+    Color sourcePieceColor = sourcePiece->getColor();
+    if (sourcePieceColor != this->turn) {
+        cout << "It is not " << sourcePieceColor << "'s "
+             << "turn to move!" << endl;
+        return false;
+    }
 
     // Construct a square for the destination and ensure
     // that it is not the same as the source square.
@@ -106,7 +145,7 @@ bool ChessBoard::submitMove(string source, string destination) {
         sourcePiece->setSquare(&(i->first));
 
         // Add information to the stringstream.
-        ss << sourcePiece->getColor() << "'s "
+        ss << sourcePieceColor << "'s "
            << sourcePiece->getName() << " moves from "
            << sourceSquare << " to " << destinationSquare;
     } else {
@@ -128,6 +167,8 @@ bool ChessBoard::submitMove(string source, string destination) {
     // Inform the client about the current move.
     cout << ss.str() << endl;
 
+    // Signal that it is the other player's turn now.
+    this->switchTurns();
     return true;
 }
 

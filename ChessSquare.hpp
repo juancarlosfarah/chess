@@ -86,6 +86,14 @@ class ChessSquare {
         // bool indicating if it is adjacent to this square.
         bool isAdjacent(const ChessSquare& other) const;
 
+        // Method: isDirectlyAbove
+        // =======================
+        bool isDirectlyAbove(const ChessSquare& other) const;
+
+        // Method: isDirectlyBelow
+        // =======================
+        bool isDirectlyBelow(const ChessSquare& other) const;
+
         // Method: isDirectlyAboveDiagonally
         // =================================
         bool isDirectlyAboveDiagonally(const ChessSquare& other) const;

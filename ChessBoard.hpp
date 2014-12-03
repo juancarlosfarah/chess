@@ -22,6 +22,7 @@ class ChessBoard {
 
         ChessSet pieces;        
         Board board;
+        Color turn;
 
         // Method: init
         // ============
@@ -34,6 +35,16 @@ class ChessBoard {
         // Method: arrangeSide
         // ===================
         void arrangeSide(Color color);
+
+        // Method: startGame
+        // =================
+        void startGame();
+
+        // Method: switchTurns
+        // ===================
+        // This method changes the turn property of the ChessBoard
+        // to the  Color of the player whose turn it is to move next.
+        void switchTurns();
 
         // Method: printTopLine
         // ====================

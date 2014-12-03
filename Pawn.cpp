@@ -32,36 +32,38 @@ bool Pawn::isValidMove(const ChessSquare& square,
 
     // Ensure validity at the ChessPiece level.
     if (!ChessPiece::isValidMove(square, piece)) return false;
-    // TODO: Remove debugging code.
-    cout << "Checking at the Pawn level." << endl;
+
+    // Ensure validity at the Pawn level.
     switch (this->color) {
         case White:
             // Destination square is directly above this square.
-            if (square.getRank() - this->square->getRank() == 1) {
+            if (this->square->isDirectlyAbove(square)) {
                 return true;
             }
-            // On white pawn's first move, two squares below is valid.
-            if (this->square->getRank() == 2 && square.getRank() == 4) {
+            // On white pawn's first move, two squares above is valid.
+            if (this->square->getRank() == 2 && square.getRank() == 4 &&
+                (this->square->getFile() == square.getFile())) {
                 return true;
             }
             // One step in superior diagonal is valid when attacking.
             if (square.isDirectlyAboveDiagonally(*(this->square)) &&
-                (piece->getColor() == Black)) {
+                (piece != nullptr && piece->getColor() == Black)) {
                 return true;
             }
             break;
         case Black:
             // Destination square is directly below this square.
-            if (square.getRank() - this->square->getRank() == -1) {
+            if (this->square->isDirectlyBelow(square)) {
                 return true;
             }
             // On black pawn's first move, two squares below is valid.
-            if (this->square->getRank() == 7 && square.getRank() == 5) {
+            if (this->square->getRank() == 7 && square.getRank() == 5 &&
+                (this->square->getFile() == square.getFile())) {
                 return true;
             }
             // One step in inferior diagonal is valid when attacking.
             if (square.isDirectlyBelowDiagonally(*(this->square)) &&
-                (piece->getColor() == White)) {
+                (piece != nullptr && piece->getColor() == White)) {
                 return true;
             }
             break;
