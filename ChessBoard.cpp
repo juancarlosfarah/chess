@@ -134,6 +134,10 @@ void ChessBoard::print() {
     int count = 0;
     map<ChessSquare, ChessPiece*>::iterator i = this->board.begin();
     while (i != this->board.end()) {
+        if (count % 8 == 0) {
+            int rank = 8 - (count / 8);
+            cout << " " << rank << " ";
+        }
         cout << "\u2502 ";
         if (i->second != nullptr) {
             cout << *(i->second);
@@ -154,7 +158,7 @@ void ChessBoard::print() {
 // Private Method: printMiddleLine
 // ===============================
 void ChessBoard::printTopLine() {
-    cout << "\u250C";
+    cout << "   " << "\u250C";
     for (short int i = 1; i <= 8; ++i) {
         cout << "\u2500\u2500\u2500";
         if (i != 8) cout << "\u252C";
@@ -166,7 +170,7 @@ void ChessBoard::printTopLine() {
 // ===============================
 void ChessBoard::printMiddleLine() {
     cout << "\u2502" << endl;
-    cout << "\u251C";
+    cout << "   " << "\u251C";
     for (short int i = 1; i <= 8; ++i) {
         cout << "\u2500\u2500\u2500";
         if (i != 8) cout << "\u253C";
@@ -178,12 +182,18 @@ void ChessBoard::printMiddleLine() {
 // ===============================
 void ChessBoard::printBottomLine() {
     cout << "\u2502" << endl;
-    cout << "\u2514";
+    cout << "   " << "\u2514";
     for (short int i = 1; i <= 8; ++i) {
         cout << "\u2500\u2500\u2500";
         if (i != 8) cout << "\u2534";
     }
     cout << "\u2518" << endl;
+    string files = "ABCDEFGH";
+    cout << "  ";
+    for (char file : files) {
+        cout << "   " << file;
+    }
+    cout << endl;
 }
 
 // Method: getChessSet
