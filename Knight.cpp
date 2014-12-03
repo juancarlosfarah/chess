@@ -12,9 +12,11 @@ using namespace std;
 Knight::Knight() : ChessPiece() {}
 
 Knight::Knight(Color color) : ChessPiece(color) {
+    this->name = "Knight";
     this->initSymbol(color);
 }
 Knight::Knight(Color c, ChessSquare* cs) : ChessPiece(c, cs) {
+    this->name = "Knight";
     this->initSymbol(c);
 }
 

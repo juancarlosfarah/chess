@@ -12,10 +12,12 @@ using namespace std;
 Rook::Rook() : ChessPiece() {}
 
 Rook::Rook(Color color) : ChessPiece(color) {
+    this->name = "Rook";
     this->initSymbol(color);
 }
 
 Rook::Rook(Color c, ChessSquare* cs) : ChessPiece(c, cs) {
+    this->name = "Rook";
     this->initSymbol(c);
 }
 

@@ -12,9 +12,11 @@ using namespace std;
 Pawn::Pawn() : ChessPiece() {}
 
 Pawn::Pawn(Color color) : ChessPiece(color) {
+    this->name = "Pawn";
     this->initSymbol(color);
 }
 Pawn::Pawn(Color c, ChessSquare* cs) : ChessPiece(c, cs) {
+    this->name = "Pawn";
     this->initSymbol(c);
 }
 

@@ -11,10 +11,12 @@
 ChessPiece::ChessPiece() {};
 
 ChessPiece::ChessPiece(Color c, ChessSquare* p) : color(c), square(p) {
+    this->name = "Piece";
     this->initSymbol(c);
 }
 
 ChessPiece::ChessPiece(Color c) : color(c) {
+    this->name = "Piece";
     this->initSymbol(c);
 }
 
@@ -62,10 +64,16 @@ bool ChessPiece::isValidMove(const ChessSquare& square,
     return true;
 }
 
-// Virtual Public Method: getColor
-// ===============================
+// Public Method: getColor
+// =======================
 Color ChessPiece::getColor() {
     return this->color;
+}
+
+// Public Method: getName
+// ======================
+string ChessPiece::getName() {
+    return this->name;
 }
 
 // Public Method: print
@@ -78,5 +86,22 @@ void ChessPiece::print() {
 // ===================
 ostream& operator<<(ostream& os, ChessPiece piece) {
     os << piece.symbol;
+    return os;
+}
+
+// Operator: <<
+// ============
+// Define the insertion operator for Color.
+ostream& operator<<(ostream& os, Color color) {
+    switch (color) {
+        case White:
+            os << "White";
+            break;
+        case Black:
+            os << "Black";
+            break;
+        default:
+            os << "Invalid Color";
+    }
     return os;
 }

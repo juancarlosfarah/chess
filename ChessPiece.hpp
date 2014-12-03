@@ -25,6 +25,7 @@ class ChessPiece {
     protected:
 
         Color color;
+        string name;
         string symbol;
         const ChessSquare* square;
 
@@ -68,11 +69,20 @@ class ChessPiece {
 
         // Method: getColor
         // ================
-        virtual Color getColor();
+        Color getColor();
+
+        // Method: getColor
+        // ================
+        virtual string getName();
 
         // Operator: <<
         // ============
         friend ostream& operator<<(ostream& os, ChessPiece piece);
 };
+
+// Operator: <<
+// ============
+// Define insertion operator for Color.
+ostream& operator <<(ostream& os, Color color);
 
 #endif

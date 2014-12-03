@@ -12,9 +12,11 @@ using namespace std;
 Bishop::Bishop() : ChessPiece() {}
 
 Bishop::Bishop(Color color) : ChessPiece(color) {
+    this->name = "Bishop";
     this->initSymbol(color);
 }
 Bishop::Bishop(Color c, ChessSquare* cs) : ChessPiece(c, cs) {
+    this->name = "Bishop";
     this->initSymbol(c);
 }
 

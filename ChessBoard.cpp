@@ -1,4 +1,5 @@
 #include <iomanip>
+#include <sstream>
 using namespace std;
 
 #include "ChessBoard.hpp"
@@ -86,9 +87,12 @@ bool ChessBoard::submitMove(string source, string destination) {
     i = this->board.find(destinationSquare);
     if (i == this->board.end()) {
         // TODO: Improve cerr.
-        cerr << "Invalid move." << endl;
+        cout << "Invalid move." << endl;
         return false;
     }
+
+    // This stream will be used to inform the client of the move.
+    stringstream ss;
 
     // Get chess piece at destination square. This will
     // be a nullptr if the destination square is empty.
@@ -100,12 +104,31 @@ bool ChessBoard::submitMove(string source, string destination) {
         this->board[sourceSquare] = nullptr;
         //cout << "Set new piece!" << endl;
         sourcePiece->setSquare(&(i->first));
-        return true;
+
+        // Add information to the stringstream.
+        ss << sourcePiece->getColor() << "'s "
+           << sourcePiece->getName() << " moves from "
+           << sourceSquare << " to " << destinationSquare;
     } else {
-        cerr << "Invalid move." << endl;
+        // TODO: Improve output.
+        cout << "Invalid move." << endl;
+        return false;
     }
 
-    return false;
+    // If the destination square contained a piece, then this piece has
+    // now been captured. Set it's square property to nullptr.
+    if (destinationPiece != nullptr) {
+        destinationPiece->setSquare(nullptr);
+
+        // Add information about capture to stringstream.
+        ss << " taking " << destinationPiece->getColor()
+           << "'s " << destinationPiece->getName();
+    }
+
+    // Inform the client about the current move.
+    cout << ss.str() << endl;
+
+    return true;
 }
 
 // Public Method: resetBoard
