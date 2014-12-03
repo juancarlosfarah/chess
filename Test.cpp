@@ -76,5 +76,9 @@ int main() {
     cb.print();
     assert(isValid == true);
 
+    isValid = cb.submitMove("H5","H7");
+    cb.print();
+    assert(isValid == true);
+
     return 0;
 }
