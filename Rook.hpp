@@ -31,6 +31,11 @@ class Rook : public ChessPiece {
         // ===========
         ~Rook();
 
+        // Method: isValidMove
+        // ===================
+        bool isValidMove(const ChessSquare& square,
+                         ChessPiece* piece) const;
+
         //// Method: getSymbol
         //// =================
         //string getSymbol();

@@ -34,6 +34,16 @@ void King::initSymbol(Color color) {
 //    return this->symbol;
 //}
 
+// Public Method: isValidMove
+// ==========================
+bool King::isValidMove(const ChessSquare& square,
+                       ChessPiece* piece) const {
+
+    // Ensure validity at the ChessPiece level.
+    if (!ChessPiece::isValidMove(square, piece)) return false;
+    return this->square->isAdjacent(square);
+}
+
 // Friend Operator: << 
 // ===================
 ostream& operator<<(ostream& os, King king) { 

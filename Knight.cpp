@@ -28,6 +28,18 @@ void Knight::initSymbol(Color color) {
     this->symbol = (color == White) ? "\u2658" : "\u265E";
 }
 
+// Public Method: isValidMove
+// ==========================
+bool Knight::isValidMove(const ChessSquare& square,
+                         ChessPiece* piece) const {
+
+    // Ensure validity at the ChessPiece level.
+    if (!ChessPiece::isValidMove(square, piece)) return false;
+
+    // Valid move if square is a knight's hop away.
+    return this->square->isKnightHopFrom(square);
+}
+
 //// Public Method: getSymbol
 //// ========================
 //string Knight::getSymbol() {

@@ -25,8 +25,46 @@ Pawn::~Pawn() {}
 
 // Public Method: isValidMove
 // ==========================
-bool Pawn::isValidMove(ChessSquare& square) {
-    return true;
+bool Pawn::isValidMove(const ChessSquare& square,
+                       ChessPiece* piece) const {
+
+    // Ensure validity at the ChessPiece level.
+    if (!ChessPiece::isValidMove(square, piece)) return false;
+    // TODO: Remove debugging code.
+    cout << "Checking at the Pawn level." << endl;
+    switch (this->color) {
+        case White:
+            // Destination square is directly above this square.
+            if (square.getRank() - this->square->getRank() == 1) {
+                return true;
+            }
+            // On white pawn's first move, two squares below is valid.
+            if (this->square->getRank() == 2 && square.getRank() == 4) {
+                return true;
+            }
+            // One step in superior diagonal is valid when attacking.
+            if (square.isDirectlyAboveDiagonally(*(this->square)) &&
+                (piece->getColor() == Black)) {
+                return true;
+            }
+            break;
+        case Black:
+            // Destination square is directly below this square.
+            if (square.getRank() - this->square->getRank() == -1) {
+                return true;
+            }
+            // On black pawn's first move, two squares below is valid.
+            if (this->square->getRank() == 7 && square.getRank() == 5) {
+                return true;
+            }
+            // One step in inferior diagonal is valid when attacking.
+            if (square.isDirectlyBelowDiagonally(*(this->square)) &&
+                (piece->getColor() == White)) {
+                return true;
+            }
+            break;
+    }
+    return false;
 }
 
 // Private Method: initSymbol

@@ -29,7 +29,7 @@ void ChessPiece::initSymbol(Color color) {
 }
 
 // Public Method: setSquare
-// ==========================
+// ========================
 // Takes a ChessSquare and sets it as the
 // square attribute of this ChessPiece.
 void ChessPiece::setSquare(const ChessSquare* cs) {
@@ -37,7 +37,7 @@ void ChessPiece::setSquare(const ChessSquare* cs) {
 }
 
 // Public Method: getSquare
-// ==========================
+// ========================
 // Returns the square attribute of this ChessPiece.
 const ChessSquare* ChessPiece::getSquare() {
     return this->square;
@@ -45,15 +45,28 @@ const ChessSquare* ChessPiece::getSquare() {
 
 // Public Method: isValidMove
 // ==========================
-bool ChessPiece::isValidMove(ChessSquare& square) {
+bool ChessPiece::isValidMove(const ChessSquare& square,
+                             ChessPiece* piece) const {
+
+    // A ChessPiece remaining in its place is not a valid move.
+    if (*(this->square) == square) return false;
+
+    // If the piece in the destination square is the same color as
+    // this piece, then return false as you cannot attack yourself.
+    if ((piece != nullptr) && (piece->getColor() == this->color)) {
+        // TODO: Improve cout and remove invalid code.
+        cout << "Invalid move." << endl;
+        cout << *piece << " cannot attack " << *this << endl;
+        return false;
+    }
     return true;
 }
 
-//// Virtual Public Method: getSymbol
-//// ================================
-//string ChessPiece::getSymbol() {
-//    return this->symbol;
-//}
+// Virtual Public Method: getColor
+// ===============================
+Color ChessPiece::getColor() {
+    return this->color;
+}
 
 // Public Method: print
 // ====================

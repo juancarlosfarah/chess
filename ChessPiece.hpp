@@ -36,19 +36,24 @@ class ChessPiece {
         ChessPiece(Color color);
         ChessPiece(Color color, ChessSquare* square);
 
+        // Copy Constructor:
+        // =================
+        //ChessPiece(ChessPiece& other);
+        //TODO: IMPLEMENT!
+
         // Destructor:
         // ===========
         virtual ~ChessPiece();
 
 
         // Method: setSquare
-        // ===================
+        // =================
         // Takes a ChessSquare and sets it as the square
         // attribute of this ChessPiece.
         void setSquare(const ChessSquare* cs);
 
         // Method: getSquare
-        // ===================
+        // =================
         // Returns the square attribute of this ChessPiece.
         const ChessSquare* getSquare();
 
@@ -58,11 +63,12 @@ class ChessPiece {
 
         // Method: isValidMove
         // ===================
-        virtual bool isValidMove(ChessSquare& square);
+        virtual bool isValidMove(const ChessSquare& square,
+                                 ChessPiece* piece) const;
 
-        //// Method: getSymbol
-        //// =================
-        //virtual string getSymbol();
+        // Method: getColor
+        // ================
+        virtual Color getColor();
 
         // Operator: <<
         // ============

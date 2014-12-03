@@ -21,7 +21,7 @@ class ChessBoard {
     private:
 
         ChessSet pieces;        
-        map<ChessSquare, ChessPiece*> board;
+        Board board;
 
         // Method: init
         // ============

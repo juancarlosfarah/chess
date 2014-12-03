@@ -29,6 +29,22 @@ void Rook::initSymbol(Color color) {
     this->symbol = (color == White) ? "\u2656" : "\u265C";
 }
 
+// Public Method: isValidMove
+// ==========================
+bool Rook::isValidMove(const ChessSquare& square,
+                       ChessPiece* piece) const {
+
+    // Ensure validity at the ChessPiece level.
+    if (!ChessPiece::isValidMove(square, piece)) return false;
+
+    // Rooks can move to any square on the same rank or file.
+    if (this->square->getRank() == square.getRank() ||
+        this->square->getFile() == square.getFile()) {
+        return true;
+    }
+    return false;
+}
+
 //// Public Method: getSymbol
 //// ========================
 //string Rook::getSymbol() {

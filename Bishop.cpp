@@ -34,6 +34,18 @@ void Bishop::initSymbol(Color color) {
 //    return this->symbol;
 //}
 
+// Public Method: isValidMove
+// ==========================
+bool Bishop::isValidMove(const ChessSquare& square,
+                         ChessPiece* piece) const {
+
+    // Ensure validity at the ChessPiece level.
+    if (!ChessPiece::isValidMove(square, piece)) return false;
+
+    // A Bishop can move on both of its diagonals.
+    return square.isDiagonalFrom(*(this->square));
+}
+
 // Friend Operator: <<
 // ===================
 ostream& operator<<(ostream& os, Bishop bishop) {

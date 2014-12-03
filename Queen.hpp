@@ -36,6 +36,11 @@ class Queen : public ChessPiece {
         //// =================
         //string getSymbol();
 
+        // Method: isValidMove
+        // ===================
+        bool isValidMove(const ChessSquare& square,
+                         ChessPiece* piece) const;
+
         // Operator: <<
         // ============
         friend ostream& operator<<(ostream& os, Queen queen);

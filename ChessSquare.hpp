@@ -75,6 +75,29 @@ class ChessSquare {
         // Returns the rank property of this ChessSquare.
         int getRank() const;
 
+
+        // Method: isDiagonalFrom
+        // ======================
+        bool isDiagonalFrom(const ChessSquare& other) const;
+
+        // Method: isAdjacent
+        // ==================
+        // Takes a const ChessSquare by reference and returns a
+        // bool indicating if it is adjacent to this square.
+        bool isAdjacent(const ChessSquare& other) const;
+
+        // Method: isDirectlyAboveDiagonally
+        // =================================
+        bool isDirectlyAboveDiagonally(const ChessSquare& other) const;
+
+        // Method: isDirectlyBelowDiagonally
+        // =================================
+        bool isDirectlyBelowDiagonally(const ChessSquare& other) const;
+
+        // Method: isKnightHopFrom
+        // =======================
+        bool isKnightHopFrom(const ChessSquare& other) const;
+
         // Operator: <
         // ===========
         bool operator<(const ChessSquare& other) const;

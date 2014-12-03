@@ -34,7 +34,8 @@ class Pawn : public ChessPiece {
 
         // Method: isValidMove
         // ===================
-        bool isValidMove(ChessSquare& square);
+        bool isValidMove(const ChessSquare& square,
+                         ChessPiece* piece) const;
 
         //// Method: getSymbol
         //// =================

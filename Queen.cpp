@@ -34,6 +34,25 @@ void Queen::initSymbol(Color color) {
 //    return this->symbol;
 //}
 
+// Public Method: isValidMove
+// ==========================
+bool Queen::isValidMove(const ChessSquare& square,
+                        ChessPiece* piece) const {
+
+    // Ensure validity at the ChessPiece level.
+    if (!ChessPiece::isValidMove(square, piece)) return false;
+
+    // Queens can move to any square on the same rank, file or diagonal.
+    if (this->square->getRank() == square.getRank() ||
+        this->square->getFile() == square.getFile() ||
+        this->square->isDiagonalFrom(square)) {
+        return true;
+    }
+
+    return false;
+}
+
+
 // Friend Operator: <<
 // ===================
 ostream& operator<<(ostream& os, Queen queen) { 

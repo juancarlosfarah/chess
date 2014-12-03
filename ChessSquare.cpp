@@ -6,6 +6,7 @@
 
 #include <cctype>
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 #include "ChessSquare.hpp"
@@ -89,6 +90,76 @@ bool ChessSquare::isValidRank(char rank) {
 bool ChessSquare::isValidRank(int rank) {
     return (rank >= 1 && rank <= 8);
 }
+
+// Public Method: isDiagonalFrom
+// =============================
+bool ChessSquare::isDiagonalFrom(const ChessSquare& other) const {
+
+    // If squares are the same, return false.
+    if (*this == other) return false;
+
+    // Calculate absolute differences of the coordinates of both
+    // squares. If both are equal, then they are on the same diagonal.
+    int fileDiff = abs(this->file - other.file);
+    int rankDiff = abs(this->rank - other.rank);
+    return (fileDiff == rankDiff);
+}
+
+// Public Method: isAdjacent
+// =========================
+// Takes a const ChessSquare by reference and returns a
+// bool indicating if it is adjacent to this square.
+bool ChessSquare::isAdjacent(const ChessSquare& other) const {
+
+    // If squares are the same, return false.
+    if (*this == other) return false;
+
+    // Calculate the Euclidean distance between the coordinates.
+    // If the distance is less than 2 (i.e. sqrt(1) or sqrt(2)),
+    // then the squares are adjacent.
+    int fileDiff = (this->file - other.file);
+    int rankDiff = (this->rank - other.rank);
+    int squareSum = pow(fileDiff, 2) + pow(rankDiff, 2);
+
+    return (sqrt(squareSum) < 2);
+}
+
+// Public Method: isDirectlyBelowDiagonally
+// ========================================
+bool ChessSquare::isDirectlyBelowDiagonally(const ChessSquare& other)
+                                            const {
+
+    // Return true if rank is directly below (i.e. difference is 1) and
+    // file is to the right or left (i.e. absolute difference is 1).
+    int fileDiff = (this->file - other.file);
+    int rankDiff = (this->file - other.file);
+    return ((rankDiff == 1) && (abs(fileDiff) == 1));
+}
+
+// Public Method: isDirectlyAboveDiagonally
+// ========================================
+bool ChessSquare::isDirectlyAboveDiagonally(const ChessSquare& other)
+                                            const {
+
+    // Return true if rank is directly above (i.e. difference is -1)
+    // and file is to the right or left (i.e. absolute difference is 1).
+    int fileDiff = (this->file - other.file);
+    int rankDiff = (this->file - other.file);
+    return ((rankDiff == -1) && (abs(fileDiff) == 1));
+}
+
+// Public Method: isKnightHopFrom
+// ==============================
+// Takes a const ChessSquare by reference and returns a bool indicating
+// if it is offset by 1 and then 2 (in all eight possible vertical and
+// horizontal combinations) from this square.
+bool ChessSquare::isKnightHopFrom(const ChessSquare& other) const {
+    int fileDiff = abs(this->file - other.file);
+    int rankDiff = abs(this->rank - other.rank);
+    return ((rankDiff == 1 && fileDiff == 2) ||
+            (rankDiff == 2 && fileDiff == 1));
+}
+
 
 // Operator: <
 // ===========

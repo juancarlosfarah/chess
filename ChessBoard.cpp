@@ -52,7 +52,9 @@ void ChessBoard::arrangeSide(Color color) {
     }
     ChessSideIterator i = side->begin();
     while (i != side->end()) {
-        
+        // TODO: Delete
+        //ChessSquare cs("A1");
+        //(*i)->isValidMove(cs); 
         //TODO: Figure out the pointer stuff.
         ChessSquare square = *((*i)->getSquare());
         this->board[square] = *i;
@@ -67,27 +69,40 @@ void ChessBoard::arrangeSide(Color color) {
 bool ChessBoard::submitMove(string source, string destination) {
     ChessSquare sourceSquare = ChessSquare(source);
     BoardIterator i = this->board.find(sourceSquare);
-    // Return false and notify client if
-    // the square is not in the board.
-    if (i == this->board.end()) {
+    // Return false and notify client if the square is
+    // not on the board or if the square is empty.
+    if (i == this->board.end() || i->second == nullptr) {
         cerr << "Invalid move." << endl;
         return false;
     }
     // Get chess piece at source square.
-    ChessPiece* piece = i->second;
+    ChessPiece* sourcePiece = i->second;
+
+    // Construct a square for the destination and ensure
+    // that it is not the same as the source square.
     ChessSquare destinationSquare = ChessSquare(destination);
+    if (sourceSquare == destinationSquare) return false;
+
     i = this->board.find(destinationSquare);
     if (i == this->board.end()) {
+        // TODO: Improve cerr.
         cerr << "Invalid move." << endl;
         return false;
     }
-    if (piece->isValidMove(destinationSquare)) {
+
+    // Get chess piece at destination square. This will
+    // be a nullptr if the destination square is empty.
+    ChessPiece* destinationPiece = i->second;
+
+    if (sourcePiece->isValidMove(destinationSquare, destinationPiece)) {
         //cout << destinationSquare << endl;
-        this->board[destinationSquare] = piece;
+        this->board[destinationSquare] = sourcePiece;
         this->board[sourceSquare] = nullptr;
         //cout << "Set new piece!" << endl;
-        piece->setSquare(&(i->first));
+        sourcePiece->setSquare(&(i->first));
         return true;
+    } else {
+        cerr << "Invalid move." << endl;
     }
 
     return false;
