@@ -20,6 +20,32 @@ int main() {
     ss << cs;
     assert(ss.str() == "A1");
 
+    // ==============
+    // Test Distances
+    // ==============
+    ChessSquare cs1('A', 5);
+    ChessSquare cs2('C', 4);
+    ChessSquare cs3('C', 5);
+    ChessSquare cs4('A', 2);
+    ChessSquare cs5('B', 7);
+    ChessSquare cs6('D', 3);
+    ChessSquare cs7('E', 4);
+    ChessSquare cs8('F', 5);
+    ChessSquare cs9('H', 1);
+    ChessSquare cs10('A', 8);
+    assert(cs1.distance(cs2) == 1);
+    assert(cs2.distance(cs3) == 0);
+    assert(cs1.distance(cs3) == 1);
+    assert(cs1.distance(cs4) == 2);
+    assert(cs7.distance(cs10) == 3);
+    assert(cs8.distance(cs7) == 0);
+    assert(cs8.distance(cs6) == 1);
+    assert(cs4.distance(cs8) == 4);
+    assert(cs9.distance(cs10) == 6);
+    assert(cs5.distance(cs9) == 5);
+    assert(cs5.distance(cs8) == 3);
+
+
     // Create ChessBoard
     ChessBoard cb;
 
@@ -84,7 +110,12 @@ int main() {
     assert(isValid == false);
 
     // Test moving White Queen D1 to H5.
+    // Should fail because the White King is in the way.
     isValid = cb.submitMove("D1","H5");
+    assert(isValid == false);
+
+    // Test moving White Queen D1 to E1.
+    isValid = cb.submitMove("D1","E1");
     cb.print();
     assert(isValid == true);
 
