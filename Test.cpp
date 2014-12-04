@@ -53,10 +53,29 @@ int main() {
     // Test printing initialised board.
     cb.print();
 
+    // ===================
+    // Test Piece Dynamics
+    // ===================
+    bool isValid;
+
+    // Test if in theory Black Pawn can move E7 to D1.
+    // Should fail given a Pawn's allowed moves.
+    ChessSquare s1 = ChessSquare("D7");
+    ChessSquare d1 = ChessSquare("E1");
+    Pawn bp(Black, &s1);
+    isValid = bp.isPossibleMove(d1, nullptr).first;
+    assert(isValid == false);
+
+    // Test if in theory Black Pawn can move E7 to D1.
+    // if there is an opponent on D1. Should fail given
+    // a Pawn's allowed moves.
+    King wk(White, &d1);
+    isValid = bp.isPossibleMove(d1, &wk).first;
+    assert(isValid == false);
+
     // ==========
     // Test Moves
     // ==========
-    bool isValid;
 
     // Test moving White Pawn E2 to E4.
     isValid = cb.submitMove("E2","E4");
@@ -72,6 +91,10 @@ int main() {
     isValid = cb.submitMove("F1","C4");
     assert(isValid == true);
     cb.print();
+
+    // Test that Black's KingTracker is unchanged
+    KingTracker bkt = cb.getKingTracker(Black);
+    assert(bkt.first == cb.getKingStartSquare(Black));
 
     // Test moving White Bishop back to F1.
     // Should fail because out of turn play.
@@ -98,6 +121,10 @@ int main() {
     isValid = cb.submitMove("E1","E2");
     cb.print();
     assert(isValid == true);
+
+    // Test that White's KingTracker is updated
+    KingTracker wkt = cb.getKingTracker(White);
+    assert(wkt.first == ChessSquare("E2"));
 
     // Test moving Black Bishop F8 to A3.
     isValid = cb.submitMove("F8","A3");
@@ -159,6 +186,29 @@ int main() {
     cb.print();
     assert(knight->getSquare() == nullptr);
     assert(isValid == true);
+
+    // Test moving White Knight G1 to H3.
+    isValid = cb.submitMove("G1","H3");
+    cb.print();
+    assert(isValid == true);
+
+    // Test moving Black Queen A3 to A6.
+    isValid = cb.submitMove("A3","A6");
+    cb.print();
+    assert(isValid == true);
+
+    // Test moving White Bishop C4 to D5.
+    // Should fail because of revealed check.
+    isValid = cb.submitMove("C4","D5");
+    assert(isValid == false);
+
+    // Test moving White Bishop C4 to D3.
+    isValid = cb.submitMove("C4","D3");
+    cb.print();
+    assert(isValid == true);
+
+
+
 
     return 0;
 }
