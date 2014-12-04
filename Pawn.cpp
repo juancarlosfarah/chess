@@ -62,7 +62,7 @@ pair<bool, bool> Pawn::isPossibleMove(const ChessSquare& square,
                 // One step in superior diagonal is valid when attacking.
                 // Return (true, false) pair indicating that the move is
                 // valid and it doesn't require validation for blocks.
-                if (square.isDirectlyAboveDiagonally(*(this->square))) {
+                if (this->square->isDirectlyAboveDiagonally(square)) {
                     rvalue.first = true;
                     return rvalue;
                 }
@@ -92,7 +92,7 @@ pair<bool, bool> Pawn::isPossibleMove(const ChessSquare& square,
                 // One step in inferior diagonal is valid when attacking.
                 // Return (true, false) pair indicating that the move is
                 // valid and it doesn't require validation for blocks.
-                if (square.isDirectlyBelowDiagonally(*(this->square))) {
+                if (this->square->isDirectlyBelowDiagonally(square)) {
                     rvalue.first = true;
                     return rvalue;
                 }

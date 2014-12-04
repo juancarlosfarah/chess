@@ -85,19 +85,7 @@ void ChessBoard::startGame() {
 // This method changes the turn property of the ChessBoard
 // to the Color of the player whose turn it is to move next.
 void ChessBoard::switchTurns() {
-    switch (this->turn) {
-        case White:
-            this->turn = Black;
-            break;
-        case Black:
-            this->turn = White;
-            break;
-        default:
-            cerr << "WARNING! The turn property of this "
-                 << "ChessBoard is not set properly. "
-                 << "Setting it by default to White." << endl;
-            this->turn = White;
-    }
+    this->turn = !this->turn;
 }
 
 // Public Method: submitMove
@@ -168,9 +156,12 @@ bool ChessBoard::submitMove(string source, string destination) {
 
     // Prepare scenario before confirming that the move is
     // fully valid, i.e. it does not leave the King in check.
+    // Also update KingSquare if applicable.
     this->board[destinationSquare] = sourcePiece;
     this->board[sourceSquare] = nullptr;
     sourcePiece->setSquare(&(j->first));
+    updateKingSquare(sourceSquare, destinationSquare);
+
 
     // Add information to the success case stringstream.
     ssSuccess << sourcePieceColor << "'s "
@@ -189,23 +180,27 @@ bool ChessBoard::submitMove(string source, string destination) {
     // Ensure that the King is not left in check.
     if (isInCheck(this->turn)) {
         // Return pieces to their original positions.
+        // Revert KingSquare if applicable.
         this->board[sourceSquare] = sourcePiece;
         this->board[destinationSquare] = destinationPiece;
         sourcePiece->setSquare(&i->first);
         if (destinationPiece != nullptr) {
             destinationPiece->setSquare(&j->first);
         }
+        updateKingSquare(destinationSquare, sourceSquare);
         // TODO: Add info to error stream?
         cout << ssError.str() << endl;
         cout << "This move leaves your King in check." << endl;
         return false;
     }
 
+    // If the opponent is now in check, notify client.
+    if (isInCheck(!this->turn)) {
+        ssSuccess << endl << !this->turn << " is in check";
+    }
+
     // Inform the client about a successful move.
     cout << ssSuccess.str() << endl;
-
-    // Update ChessSquare in KingTracker if applicable.
-    updateKingSquare(sourceSquare, destinationSquare);
 
     // Signal that it is the other player's turn now.
     this->switchTurns();
