@@ -207,8 +207,50 @@ int main() {
     cb.print();
     assert(isValid == true);
 
+    // Test moving Black Queen A6 to D3,
+    // taking White Bishop. Ensure White
+    // Bishop is left with a nullptr square.
+    ChessSquare wbs("D3");
+    ChessPiece* wb = cb.getBoard()[wbs];
+    isValid = cb.submitMove("A6","D3");
+    cb.print();
+    assert(wb->getSquare() == nullptr);
+    assert(isValid == true);
 
+    // Test moving White King E2 to F1.
+    // Should fail because King still in check.
+    isValid = cb.submitMove("E2","F1");
+    assert(isValid == false);
 
+    // Test moving White King E2 to D1.
+    isValid = cb.submitMove("E2","D1");
+    cb.print();
+    assert(isValid == true);
+
+    // Test moving Black Queen D3 to D4.
+    isValid = cb.submitMove("D3","D4");
+    cb.print();
+    assert(isValid == true);
+
+    // Test moving White King D1 to E2.
+    isValid = cb.submitMove("D1","E2");
+    cb.print();
+    assert(isValid == true);
+
+    // Test moving Black Queen D4 to D3.
+    isValid = cb.submitMove("D4","D3");
+    cb.print();
+    assert(isValid == true);
+
+    // Test moving White Pawn C2 to D3,
+    // taking Black Queen. Ensure Black
+    // Queen is left with a nullptr square.
+    ChessSquare bqs("D3");
+    ChessPiece* bq = cb.getBoard()[bqs];
+    isValid = cb.submitMove("C2","D3");
+    cb.print();
+    assert(bq->getSquare() == nullptr);
+    assert(isValid == true);
 
     return 0;
 }
