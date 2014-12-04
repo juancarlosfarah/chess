@@ -83,6 +83,11 @@ class ChessPiece {
 // Operator: <<
 // ============
 // Define insertion operator for Color.
-ostream& operator <<(ostream& os, Color color);
+ostream& operator <<(ostream& os, const Color& color);
+
+// Operator: <<
+// ============
+// Define insertion operator for Color.
+Color operator !(const Color& color);
 
 #endif

@@ -16,6 +16,7 @@ typedef pair<ChessSquare, ChessPiece*> Position;
 typedef map<ChessSquare, ChessPiece*> Board;
 typedef Board::iterator BoardIterator;
 typedef Board::const_iterator BoardConstIterator;
+typedef pair<ChessSquare, bool> KingTracker;
 
 class ChessBoard {
 
@@ -24,6 +25,10 @@ class ChessBoard {
         ChessSet pieces;        
         Board board;
         Color turn;
+
+        // Tracks position and check status of each King.
+        KingTracker whiteKing;
+        KingTracker blackKing;
 
         // Method: init
         // ============
@@ -47,23 +52,38 @@ class ChessBoard {
         // to the  Color of the player whose turn it is to move next.
         void switchTurns();
 
-        // Method: isValidMove
-        // ===================
-        bool isValidMove(const ChessSquare& source,
-                         const ChessSquare& destination,
-                         bool isPotentiallyBlocked) const;
+        // Method: updateKingSquare
+        // ========================
+        void updateKingSquare(const ChessSquare& source,
+                              const ChessSquare& destination);
+
+        // Method: isObstructed
+        // ====================
+        bool isObstructed(const ChessSquare& source,
+                          const ChessSquare& destination) const;
+
+        // Method: isInCheck
+        // =================
+        bool isInCheck(Color color) const;
+
+        // Method: isPossibleMove
+        // ======================
+        bool isPossibleMove(const ChessSquare& sourceSquare,
+                            const ChessSquare& destinationSquare,
+                            ChessPiece* sourcePiece,
+                            ChessPiece* destinationPiece) const;
 
         // Method: printTopLine
         // ====================
-        void printTopLine();
+        void printTopLine() const;
 
         // Method: printMiddleLine
         // =======================
-        void printMiddleLine();
+        void printMiddleLine() const;
 
         // Method: printBottomLine
         // =======================
-        void printBottomLine();
+        void printBottomLine() const;
 
     public:
 
@@ -85,19 +105,26 @@ class ChessBoard {
    
         // Method: getBoard
         // ================
-        map<ChessSquare, ChessPiece*> getBoard();
-
-        // Method: print
-        // =============
-        void print();
+        Board getBoard() const;
 
         // Method: getChessSet
         // ===================
-        ChessSet getChessSet();
+        ChessSet getChessSet() const;
 
-        // Operator: <<
-        // ============
-        friend ostream& operator<<(ostream& os, ChessBoard cb);
+        // Method: getKingTracker
+        // ======================
+        KingTracker getKingTracker(Color color) const;
+
+        // Method: getKingStartSquare
+        // ==========================
+        // This method is used to define the default
+        // start square for the black and white Kings.
+        ChessSquare getKingStartSquare(Color color) const;
+
+        // Method: print
+        // =============
+        void print() const;
+
 };
 
 #endif

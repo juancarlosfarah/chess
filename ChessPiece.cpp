@@ -48,7 +48,7 @@ const ChessSquare* ChessPiece::getSquare() {
 // Public Method: isPossibleMove
 // =============================
 pair<bool, bool> ChessPiece::isPossibleMove(const ChessSquare& square,
-                                         ChessPiece* piece) const {
+                                            ChessPiece* piece) const {
 
     // Initialise return value pair.
     pair<bool, bool> rvalue(true, false);
@@ -95,7 +95,7 @@ ostream& operator<<(ostream& os, ChessPiece piece) {
 // Operator: <<
 // ============
 // Define the insertion operator for Color.
-ostream& operator<<(ostream& os, Color color) {
+ostream& operator<<(ostream& os, const Color& color) {
     switch (color) {
         case White:
             os << "White";
@@ -107,4 +107,22 @@ ostream& operator<<(ostream& os, Color color) {
             os << "Invalid Color";
     }
     return os;
+}
+
+// Operator: !
+// ===========
+// Define the negation operator for Color.
+Color operator!(const Color& color) {
+    switch (color) {
+        case White:
+            return Black;
+        case Black:
+            return White;
+    }
+    // By default return White, but notify client
+    // that there is a potential problem with Color.
+    cout << "ERROR! Invalid Color. Returning White as "
+         << "default. Check for possible corruption."
+         << endl;
+    return White;
 }

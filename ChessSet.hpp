@@ -21,6 +21,7 @@ using namespace std;
 
 typedef array<ChessPiece*, 16> ChessSide;
 typedef ChessSide::iterator ChessSideIterator;
+typedef ChessSide::const_iterator ChessSideConstIterator;
 
 class ChessSet {
 
@@ -32,10 +33,6 @@ class ChessSet {
         // ================
         void initSide(Color color);
 
-        // Method: getSide
-        // ===============
-        ChessSide* getSide(Color color);
-
     public:
 
         // Constructor: Default
@@ -46,17 +43,21 @@ class ChessSet {
         // ===========
         ~ChessSet();
 
+        // Method: getSide
+        // ===============
+        const ChessSide* getSide(const Color& color) const;
+
         // Method: getWhites
         // =================
-        ChessSide* getWhites();
+        const ChessSide* getWhites() const;
 
         // Method: getBlacks
         // =================
-        ChessSide* getBlacks();
+        const ChessSide* getBlacks() const;
 
         // Method: print
         // =============
-        void print();
+        void print() const;
 };
 
 #endif

@@ -159,7 +159,7 @@ bool ChessSquare::isDirectlyBelowDiagonally(const ChessSquare& other)
     // Return true if rank is directly below (i.e. difference is 1) and
     // file is to the right or left (i.e. absolute difference is 1).
     int fileDiff = (this->file - other.file);
-    int rankDiff = (this->file - other.file);
+    int rankDiff = (this->rank - other.rank);
     return ((rankDiff == 1) && (abs(fileDiff) == 1));
 }
 
@@ -171,7 +171,7 @@ bool ChessSquare::isDirectlyAboveDiagonally(const ChessSquare& other)
     // Return true if rank is directly above (i.e. difference is -1)
     // and file is to the right or left (i.e. absolute difference is 1).
     int fileDiff = (this->file - other.file);
-    int rankDiff = (this->file - other.file);
+    int rankDiff = (this->rank - other.rank);
     return ((rankDiff == -1) && (abs(fileDiff) == 1));
 }
 
