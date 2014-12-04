@@ -36,16 +36,29 @@ void Bishop::initSymbol(Color color) {
 //    return this->symbol;
 //}
 
-// Public Method: isValidMove
-// ==========================
-bool Bishop::isValidMove(const ChessSquare& square,
-                         ChessPiece* piece) const {
+// Public Method: isPossibleMove
+// =============================
+pair<bool, bool> Bishop::isPossibleMove(const ChessSquare& square,
+                                     ChessPiece* piece) const {
+
+    // Initialise return value.
+    pair<bool, bool> rvalue(false, false);
 
     // Ensure validity at the ChessPiece level.
-    if (!ChessPiece::isValidMove(square, piece)) return false;
+    if (!ChessPiece::isPossibleMove(square, piece).first) return rvalue;
 
     // A Bishop can move on both of its diagonals.
-    return square.isDiagonalFrom(*(this->square));
+    if (this->square->isDiagonalFrom(square)) {
+
+        // If its source and destination squares are not adjacent, this
+        // move needs to be validated for potential blocks. Set the
+        // second bool in the rvalue to true.
+        if (!this->square->isAdjacent(square)) {
+            rvalue.second = true;
+        }
+        rvalue.first = true;
+    }
+    return rvalue;
 }
 
 // Friend Operator: <<

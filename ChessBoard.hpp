@@ -15,6 +15,7 @@ using namespace std;
 typedef pair<ChessSquare, ChessPiece*> Position;
 typedef map<ChessSquare, ChessPiece*> Board;
 typedef Board::iterator BoardIterator;
+typedef Board::const_iterator BoardConstIterator;
 
 class ChessBoard {
 
@@ -45,6 +46,12 @@ class ChessBoard {
         // This method changes the turn property of the ChessBoard
         // to the  Color of the player whose turn it is to move next.
         void switchTurns();
+
+        // Method: isValidMove
+        // ===================
+        bool isValidMove(const ChessSquare& source,
+                         const ChessSquare& destination,
+                         bool isPotentiallyBlocked) const;
 
         // Method: printTopLine
         // ====================

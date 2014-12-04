@@ -36,22 +36,32 @@ void Queen::initSymbol(Color color) {
 //    return this->symbol;
 //}
 
-// Public Method: isValidMove
+// Public Method: isPossibleMove
 // ==========================
-bool Queen::isValidMove(const ChessSquare& square,
-                        ChessPiece* piece) const {
+pair<bool, bool> Queen::isPossibleMove(const ChessSquare& square,
+                                    ChessPiece* piece) const {
+
+    // Initialise return value.
+    pair<bool, bool> rvalue(false, false);
 
     // Ensure validity at the ChessPiece level.
-    if (!ChessPiece::isValidMove(square, piece)) return false;
+    if (!ChessPiece::isPossibleMove(square, piece).first) return rvalue;
 
     // Queens can move to any square on the same rank, file or diagonal.
     if (this->square->getRank() == square.getRank() ||
         this->square->getFile() == square.getFile() ||
         this->square->isDiagonalFrom(square)) {
-        return true;
+
+        // If its source and destination squares are not adjacent, this
+        // move needs to be validated for potential blocks. Set the
+        // second bool in the rvalue to true.
+        if (!this->square->isAdjacent(square)) {
+            rvalue.second = true;
+        }
+        rvalue.first = true;
     }
 
-    return false;
+    return rvalue;
 }
 
 

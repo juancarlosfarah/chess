@@ -11,9 +11,16 @@ using namespace std;
 
 #include "ChessSquare.hpp"
 
-// Constructor:
-// ============
+// Constructor: Default
+// ====================
 ChessSquare::ChessSquare() {}
+
+// Constructor: Copy
+// =================
+ChessSquare::ChessSquare(const ChessSquare& other) {
+    this->rank = other.rank;
+    this->file = other.file;
+}
 
 // Constructor:
 // ============
@@ -114,14 +121,9 @@ bool ChessSquare::isAdjacent(const ChessSquare& other) const {
     // If squares are the same, return false.
     if (*this == other) return false;
 
-    // Calculate the Euclidean distance between the coordinates.
-    // If the distance is less than 2 (i.e. sqrt(1) or sqrt(2)),
-    // then the squares are adjacent.
-    int fileDiff = (this->file - other.file);
-    int rankDiff = (this->rank - other.rank);
-    int squareSum = pow(fileDiff, 2) + pow(rankDiff, 2);
-
-    return (sqrt(squareSum) < 2);
+    // Calculate the distance between the squares. If the
+    // distance is zero then the squares are adjacent.
+    return (this->distance(other) == 0);
 }
 
 // Public Method: isDirectlyBelow
@@ -185,6 +187,89 @@ bool ChessSquare::isKnightHopFrom(const ChessSquare& other) const {
             (rankDiff == 2 && fileDiff == 1));
 }
 
+// Public Method: distance
+// =======================
+// Takes a const ChessSquare by reference and returns an int indicating
+// the number of squares between this square and that square.
+int ChessSquare::distance(const ChessSquare& other) const {
+
+    // In a ChessBoard, the number of squares between one square and
+    // another is indicated by the maximum of the differences minus 1.
+    int fileDiff = abs(this->file - other.file);
+    int rankDiff = abs(this->rank - other.rank);
+    return (max(fileDiff, rankDiff) - 1);
+}
+
+// Public Method: getSquaresBetween
+// ================================
+// Note that if the squares are not in the same rank, file or diagonal
+// this method returns the empty set.
+set<ChessSquare> ChessSquare::getSquaresBetween(const ChessSquare& other)
+                                                const {
+
+    // By default, return an empty set of squares.
+    set<ChessSquare> squares;
+
+    // TODO: Remove debugging code
+    //cout << "Validating path is clear from "
+    //     << *this << " to " << other << endl;
+    if (this->rank == other.rank) {
+        int displacement = this->file - other.file;
+        int distance = abs(displacement) - 1;
+        while (distance > 0) {
+            ChessSquare cs(*this);
+            if (displacement < 0) {
+                cs.file += distance;
+            } else {
+                cs.file -= distance;
+            }
+            squares.insert(cs);
+             --distance;
+        }
+    }
+
+    if (this->file == other.file) {
+        int displacement = this->rank - other.rank;
+        int distance = abs(displacement) - 1;
+        while (distance > 0) {
+            ChessSquare cs(*this);
+            if (displacement < 0) {
+                cs.rank += distance;
+            } else {
+                cs.rank -= distance;
+            }
+            squares.insert(cs);
+            --distance;
+        }
+    }
+
+    if (this->isDiagonalFrom(other)) {
+        int verticalDisplacement = this->rank - other.rank;
+        int horizontalDisplacement = this->file - other.file;
+        int distance = this->distance(other);
+        while (distance > 0) {
+            int newRank = this->rank;
+            char newFile = this->file;
+            if (verticalDisplacement < 0)  {
+                newRank += distance;
+            } else {
+                newRank -= distance;
+            }
+            if (horizontalDisplacement < 0) {
+                newFile += distance;
+            } else {
+                newFile -= distance;
+            }
+            // TODO: Remove debugging code.
+            // cout << newFile << newRank << endl;
+            ChessSquare cs(newFile, newRank);
+            squares.insert(cs);
+            --distance;
+        }
+    }
+
+    return squares;
+}
 
 // Operator: <
 // ===========

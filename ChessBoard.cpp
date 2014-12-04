@@ -54,9 +54,6 @@ void ChessBoard::arrangeSide(Color color) {
     }
     ChessSideIterator i = side->begin();
     while (i != side->end()) {
-        // TODO: Delete
-        //ChessSquare cs("A1");
-        //(*i)->isValidMove(cs); 
         //TODO: Figure out the pointer stuff.
         ChessSquare square = *((*i)->getSquare());
         this->board[square] = *i;
@@ -71,7 +68,6 @@ void ChessBoard::arrangeSide(Color color) {
 void ChessBoard::startGame() {
     this->turn = White;
     cout << "A new chess game is started!" << endl;
-    cout << endl;
 }
 
 // Private Method: switchTurns
@@ -100,10 +96,18 @@ void ChessBoard::switchTurns() {
 bool ChessBoard::submitMove(string source, string destination) {
     ChessSquare sourceSquare = ChessSquare(source);
     BoardIterator i = this->board.find(sourceSquare);
-    // Return false and notify client if the square is
-    // not on the board or if the square is empty.
-    if (i == this->board.end() || i->second == nullptr) {
-        cerr << "Invalid move." << endl;
+    // If the ChessSquare is not on the board, then the ChessBoard
+    // might have been corrupted. Notify client.
+    if (i == this->board.end()) {
+        cout << "ERROR! Square is not on the board. It is possible "
+             << "that this ChessBoard has been corrupted." << endl;
+        return false;
+    }
+
+    // Return false and notify client if the square is empty.
+    if (i->second == nullptr) {
+        cout << "There is no piece at position "
+             << sourceSquare << "!" << endl;
         return false;
     }
     // Get chess piece at source square.
@@ -137,11 +141,26 @@ bool ChessBoard::submitMove(string source, string destination) {
     // be a nullptr if the destination square is empty.
     ChessPiece* destinationPiece = i->second;
 
-    if (sourcePiece->isValidMove(destinationSquare, destinationPiece)) {
-        //cout << destinationSquare << endl;
+    // Ensure that the move is possible given its rules of movement. If
+    // so the first bool in the response will be true. The second bool
+    // is true if the move is possible, but requires an extra check to
+    // make sure there is nothing blocking the path of the move.
+    pair<bool, bool> response;
+    response = sourcePiece->isPossibleMove(destinationSquare,
+                                        destinationPiece);
+
+    // If the move is not possible for that piece, return false.
+    if (!response.first) {
+        // TODO: Improve output.
+        cout << "Invalid move." << endl;
+        return false;
+    }
+
+    if (this->isValidMove(sourceSquare, destinationSquare,
+                          response.second)) {
+
         this->board[destinationSquare] = sourcePiece;
         this->board[sourceSquare] = nullptr;
-        //cout << "Set new piece!" << endl;
         sourcePiece->setSquare(&(i->first));
 
         // Add information to the stringstream.
@@ -149,8 +168,6 @@ bool ChessBoard::submitMove(string source, string destination) {
            << sourcePiece->getName() << " moves from "
            << sourceSquare << " to " << destinationSquare;
     } else {
-        // TODO: Improve output.
-        cout << "Invalid move." << endl;
         return false;
     }
 
@@ -169,6 +186,44 @@ bool ChessBoard::submitMove(string source, string destination) {
 
     // Signal that it is the other player's turn now.
     this->switchTurns();
+    return true;
+}
+
+// Private Method: isValidMove
+// ===========================
+// Validate the move from the point of view of the ChessBoard.
+bool ChessBoard::isValidMove(const ChessSquare& source,
+                             const ChessSquare& destination,
+                             bool isPotentiallyBlocked) const {
+
+    // Get the name and colour of the piece being moved
+    // in order to include them in messages to the client.
+    BoardConstIterator i = this->board.find(source);
+    string name = i->second->getName();
+    Color color = i->second->getColor();
+
+    // For moves in straight lines spanning more than one square,
+    // ensure that there is no piece blocking the way between the
+    // source and destination squares.
+    if (isPotentiallyBlocked) {
+        set<ChessSquare> squares = source.getSquaresBetween(destination);
+        set<ChessSquare>::iterator j = squares.begin();
+        while (j != squares.end()) {
+            i = this->board.find(*j);
+            if (i->second != nullptr) {
+                // TODO: Remove the following two lines.
+                cout << "Invalid move. Path blocked by "
+                     << *(i->second) << endl;
+                cout << color << "'s " << name << " cannot move to "
+                     << destination << "!" << endl;
+                return false;
+            }
+            ++j;
+        }
+    }
+
+    // Ensure that the King is not left in check.
+
     return true;
 }
 

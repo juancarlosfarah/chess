@@ -62,10 +62,10 @@ class ChessPiece {
         // =============
         void print();
 
-        // Method: isValidMove
-        // ===================
-        virtual bool isValidMove(const ChessSquare& square,
-                                 ChessPiece* piece) const;
+        // Method: isPossibleMove
+        // ======================
+        virtual pair<bool, bool> isPossibleMove(const ChessSquare& square,
+                                             ChessPiece* piece) const;
 
         // Method: getColor
         // ================

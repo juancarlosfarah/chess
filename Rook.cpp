@@ -31,20 +31,30 @@ void Rook::initSymbol(Color color) {
     this->symbol = (color == White) ? "\u2656" : "\u265C";
 }
 
-// Public Method: isValidMove
+// Public Method: isPossibleMove
 // ==========================
-bool Rook::isValidMove(const ChessSquare& square,
-                       ChessPiece* piece) const {
+pair<bool, bool> Rook::isPossibleMove(const ChessSquare& square,
+                                   ChessPiece* piece) const {
+
+    // Initialise return value.
+    pair<bool, bool> rvalue(false, false);
 
     // Ensure validity at the ChessPiece level.
-    if (!ChessPiece::isValidMove(square, piece)) return false;
+    if (!ChessPiece::isPossibleMove(square, piece).first) return rvalue;
 
-    // Rooks can move to any square on the same rank or file.
+    // A Rook can move to any square on the same rank or file. If its
     if (this->square->getRank() == square.getRank() ||
         this->square->getFile() == square.getFile()) {
-        return true;
+
+        // If its source and destination squares are not adjacent, this
+        // move needs to be validated for potential blocks. Set the
+        // second bool in the rvalue to true.
+        if (!this->square->isAdjacent(square)) {
+            rvalue.second = true;
+        }
+        rvalue.first = true;
     }
-    return false;
+    return rvalue;
 }
 
 //// Public Method: getSymbol

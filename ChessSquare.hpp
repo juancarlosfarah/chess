@@ -8,6 +8,7 @@
 #define CHESS_SQUARE_HPP
 
 #include <string>
+#include <set>
 #include <utility>
 using namespace std;
 
@@ -47,6 +48,10 @@ class ChessSquare {
         // Constructor: Default
         // ====================
         ChessSquare();
+
+        // Constructor: Copy
+        // =================
+        ChessSquare(const ChessSquare& other);
 
         // Constructor:
         // ============
@@ -105,6 +110,16 @@ class ChessSquare {
         // Method: isKnightHopFrom
         // =======================
         bool isKnightHopFrom(const ChessSquare& other) const;
+
+        // Method: getSquaresBetween
+        // =========================
+        set<ChessSquare> getSquaresBetween(const ChessSquare& other) const;
+
+        // Method: distance
+        // ================
+        // Takes a const ChessSquare by reference and returns an integer
+        // with the number of squares between this square and that square.
+        int distance(const ChessSquare& other) const;
 
         // Operator: <
         // ===========

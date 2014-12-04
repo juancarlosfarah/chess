@@ -32,10 +32,10 @@ class Pawn : public ChessPiece {
         // ===========
         ~Pawn();
 
-        // Method: isValidMove
+        // Method: isPossibleMove
         // ===================
-        bool isValidMove(const ChessSquare& square,
-                         ChessPiece* piece) const;
+        pair<bool, bool> isPossibleMove(const ChessSquare& square,
+                                     ChessPiece* piece) const;
 
         //// Method: getSymbol
         //// =================

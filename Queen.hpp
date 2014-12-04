@@ -36,10 +36,10 @@ class Queen : public ChessPiece {
         //// =================
         //string getSymbol();
 
-        // Method: isValidMove
+        // Method: isPossibleMove
         // ===================
-        bool isValidMove(const ChessSquare& square,
-                         ChessPiece* piece) const;
+        pair<bool, bool> isPossibleMove(const ChessSquare& square,
+                                     ChessPiece* piece) const;
 
         // Operator: <<
         // ============

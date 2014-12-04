@@ -36,14 +36,25 @@ void King::initSymbol(Color color) {
 //    return this->symbol;
 //}
 
-// Public Method: isValidMove
+// Public Method: isPossibleMove
 // ==========================
-bool King::isValidMove(const ChessSquare& square,
-                       ChessPiece* piece) const {
+pair<bool, bool> King::isPossibleMove(const ChessSquare& square,
+                                   ChessPiece* piece) const {
+
+    // Initialise return value.
+    pair<bool, bool> rvalue(false, false);
 
     // Ensure validity at the ChessPiece level.
-    if (!ChessPiece::isValidMove(square, piece)) return false;
-    return this->square->isAdjacent(square);
+    if (!ChessPiece::isPossibleMove(square, piece).first) return rvalue;
+    
+    // A King can only move to any adjacent square and so does not
+    // require the extra validation for potential blocks in the way,
+    // thus leaving the second bool in rvalue as false.
+    if (this->square->isAdjacent(square)) {
+        rvalue.first = true;
+    }
+
+    return rvalue;
 }
 
 // Friend Operator: << 

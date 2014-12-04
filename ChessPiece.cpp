@@ -45,23 +45,26 @@ const ChessSquare* ChessPiece::getSquare() {
     return this->square;
 }
 
-// Public Method: isValidMove
-// ==========================
-bool ChessPiece::isValidMove(const ChessSquare& square,
-                             ChessPiece* piece) const {
+// Public Method: isPossibleMove
+// =============================
+pair<bool, bool> ChessPiece::isPossibleMove(const ChessSquare& square,
+                                         ChessPiece* piece) const {
 
-    // A ChessPiece remaining in its place is not a valid move.
-    if (*(this->square) == square) return false;
+    // Initialise return value pair.
+    pair<bool, bool> rvalue(true, false);
 
-    // If the piece in the destination square is the same color as
+    // A ChessPiece remaining in its place is not a valid move. Also,
+    // if the piece in the destination square is the same color as
     // this piece, then return false as you cannot attack yourself.
-    if ((piece != nullptr) && (piece->getColor() == this->color)) {
+    if ((*(this->square) == square) ||
+        ((piece != nullptr) && (piece->getColor() == this->color))) {
+
         // TODO: Improve cout and remove invalid code.
         cout << "Invalid move." << endl;
         cout << *piece << " cannot attack " << *this << endl;
-        return false;
+        rvalue.first = false;
     }
-    return true;
+    return rvalue;
 }
 
 // Public Method: getColor

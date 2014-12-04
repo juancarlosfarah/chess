@@ -30,16 +30,25 @@ void Knight::initSymbol(Color color) {
     this->symbol = (color == White) ? "\u2658" : "\u265E";
 }
 
-// Public Method: isValidMove
-// ==========================
-bool Knight::isValidMove(const ChessSquare& square,
-                         ChessPiece* piece) const {
+// Public Method: isPossibleMove
+// =============================
+pair<bool, bool> Knight::isPossibleMove(const ChessSquare& square,
+                                     ChessPiece* piece) const {
+
+    // Initialise return value.
+    pair<bool, bool> rvalue(false, false);
 
     // Ensure validity at the ChessPiece level.
-    if (!ChessPiece::isValidMove(square, piece)) return false;
+    if (!ChessPiece::isPossibleMove(square, piece).first) return rvalue;
 
-    // Valid move if square is a knight's hop away.
-    return this->square->isKnightHopFrom(square);
+    // A Knight can only move by "hopping" so it does not require the
+    // extra validation for potential blocks in the way, thus leaving
+    // the second bool in rvalue as false.
+    if (this->square->isKnightHopFrom(square)) {
+        rvalue.first = true;
+    }
+
+    return rvalue;
 }
 
 //// Public Method: getSymbol
