@@ -133,7 +133,7 @@ bool ChessSquare::isDirectlyBelow(const ChessSquare& other) const {
     // Return true if rank is directly below (i.e. difference
     // is 1) and file is the same (i.e. difference is 0).
     int fileDiff = (this->file - other.file);
-    int rankDiff = (this->file - other.file);
+    int rankDiff = (this->rank - other.rank);
     return ((rankDiff == 1) && (fileDiff == 0));
 
 }
@@ -145,7 +145,7 @@ bool ChessSquare::isDirectlyAbove(const ChessSquare& other) const {
     // Return true if rank is directly above (i.e. difference
     // is -1) and file is the same (i.e. difference is 0).
     int fileDiff = (this->file - other.file);
-    int rankDiff = (this->file - other.file);
+    int rankDiff = (this->rank - other.rank);
     return ((rankDiff == -1) && (fileDiff == 0));
 
 }
