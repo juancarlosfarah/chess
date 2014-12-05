@@ -15,7 +15,21 @@ ChessSet::ChessSet() {
 
 // Destructor:
 // ===========
-ChessSet::~ChessSet() {}
+ChessSet::~ChessSet() {
+    ChessSideIterator i = this->whites.begin();
+    while (i != this->whites.end()) {
+        delete *(i);
+        *i = nullptr;
+        ++i;
+    }
+    cout << endl;
+    i = this->blacks.begin();
+    while (i != this->blacks.end()) {
+        delete *(i);
+        *i = nullptr;
+        ++i;
+    }
+}
 
 // Private Method: initSide
 // ========================

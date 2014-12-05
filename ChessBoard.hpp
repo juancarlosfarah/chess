@@ -22,7 +22,7 @@ class ChessBoard {
 
     private:
 
-        ChessSet pieces;        
+        ChessSet* pieces;
         Board board;
         Color turn;
 
@@ -41,6 +41,10 @@ class ChessBoard {
         // Method: arrangeSide
         // ===================
         void arrangeSide(Color color);
+
+        // Method: cleanUp
+        // ===============
+        void cleanUp();
 
         // Method: startGame
         // =================

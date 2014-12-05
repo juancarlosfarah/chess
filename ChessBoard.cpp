@@ -19,6 +19,10 @@ ChessBoard::~ChessBoard() {}
 // Private Method: init
 // ====================
 void ChessBoard::init() {
+
+    // Get Set of ChessPieces
+    this->pieces = new ChessSet();
+
     for (int i = 65; i <= 72; ++i) {
         for (int rank = 1; rank <= 8; ++rank) {
             char file = static_cast<char>(i);
@@ -31,6 +35,16 @@ void ChessBoard::init() {
                      << "when calling ChessBoard::init()." << endl;
             }
         }
+    }
+}
+
+// Private Method: cleanUp
+// =======================
+void ChessBoard::cleanUp() {
+    BoardIterator i = this->board.begin();
+    while (i != this->board.end()) {
+        i->second = nullptr;
+        ++i;
     }
 }
 
@@ -48,9 +62,9 @@ void ChessBoard::arrange() {
 void ChessBoard::arrangeSide(Color color) {
     const ChessSide* side;
     if (color == White) {
-        side = this->pieces.getWhites();
+        side = this->pieces->getWhites();
     } else {
-        side = this->pieces.getBlacks();
+        side = this->pieces->getBlacks();
     }
     ChessSideConstIterator i = side->begin();
     while (i != side->end()) {
@@ -291,7 +305,7 @@ bool ChessBoard::isInCheck(Color color) const {
     // Get all of the opponents pieces that are still on the board,
     // i.e. whose square property is not nullptr and see if any of
     // them can attack this player's King. If so return true.
-    const ChessSide* opponents = this->pieces.getSide(!color);
+    const ChessSide* opponents = this->pieces->getSide(!color);
     ChessSideConstIterator j = opponents->begin();
     while (j != opponents->end()) {
         ChessPiece* opponent = *j;
@@ -312,7 +326,14 @@ bool ChessBoard::isInCheck(Color color) const {
 // =========================
 // This method resets the chess board back to its initial state.
 void ChessBoard::resetBoard() {
+    // Reset pieces to a fresh ChessSet
+    delete this->pieces;
+    this->pieces = new ChessSet();
+
+    // Clean up the board
+    this->cleanUp();
     this->arrange();
+    this->startGame();
 }
 
 // Public Method: getBoard
@@ -427,5 +448,5 @@ void ChessBoard::printBottomLine() const {
 // Method: getChessSet
 // ===================
 ChessSet ChessBoard::getChessSet() const {
-    return this->pieces;
+    return *(this->pieces);
 }
