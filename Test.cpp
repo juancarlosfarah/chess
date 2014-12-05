@@ -82,8 +82,8 @@ int main() {
     assert(isValid == true);
     cb.print();
 
-    // Test moving Black Pawn E7 to E4.
-    isValid = cb.submitMove("E7","E5");
+    // Test moving Black Pawn E7 to E6.
+    isValid = cb.submitMove("E7","E6");
     assert(isValid == true);
     cb.print();
 
