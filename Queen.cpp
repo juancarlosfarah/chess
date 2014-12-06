@@ -15,7 +15,7 @@ Queen::Queen(Color color) : ChessPiece(color) {
     this->name = "Queen";
     this->initSymbol(color);
 }
-Queen::Queen(Color c, ChessSquare* cs) : ChessPiece(c, cs) {
+Queen::Queen(Color c, const ChessSquare& cs) : ChessPiece(c, cs) {
     this->name = "Queen";
     this->initSymbol(c);
 }
@@ -30,16 +30,10 @@ void Queen::initSymbol(Color color) {
     this->symbol = (color == White) ? "\u2655" : "\u265B";
 }
 
-//// Public Method: getSymbol
-//// ========================
-//string Queen::getSymbol() {
-//    return this->symbol;
-//}
-
 // Public Method: isPossibleMove
 // ==========================
-pair<bool, bool> Queen::isPossibleMove(const ChessSquare& square,
-                                    ChessPiece* piece) const {
+pair<bool, bool> Queen::isPossibleMove(ChessSquare& square,
+                                       ChessPiece* piece) const {
 
     // Initialise return value.
     pair<bool, bool> rvalue(false, false);

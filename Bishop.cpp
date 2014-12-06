@@ -15,7 +15,7 @@ Bishop::Bishop(Color color) : ChessPiece(color) {
     this->name = "Bishop";
     this->initSymbol(color);
 }
-Bishop::Bishop(Color c, ChessSquare* cs) : ChessPiece(c, cs) {
+Bishop::Bishop(Color c, const ChessSquare& cs) : ChessPiece(c, cs) {
     this->name = "Bishop";
     this->initSymbol(c);
 }
@@ -38,8 +38,8 @@ void Bishop::initSymbol(Color color) {
 
 // Public Method: isPossibleMove
 // =============================
-pair<bool, bool> Bishop::isPossibleMove(const ChessSquare& square,
-                                     ChessPiece* piece) const {
+pair<bool, bool> Bishop::isPossibleMove(ChessSquare& square,
+                                        ChessPiece* piece) const {
 
     // Initialise return value.
     pair<bool, bool> rvalue(false, false);

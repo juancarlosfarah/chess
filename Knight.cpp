@@ -15,7 +15,7 @@ Knight::Knight(Color color) : ChessPiece(color) {
     this->name = "Knight";
     this->initSymbol(color);
 }
-Knight::Knight(Color c, ChessSquare* cs) : ChessPiece(c, cs) {
+Knight::Knight(Color c, const ChessSquare& cs) : ChessPiece(c, cs) {
     this->name = "Knight";
     this->initSymbol(c);
 }
@@ -32,8 +32,8 @@ void Knight::initSymbol(Color color) {
 
 // Public Method: isPossibleMove
 // =============================
-pair<bool, bool> Knight::isPossibleMove(const ChessSquare& square,
-                                     ChessPiece* piece) const {
+pair<bool, bool> Knight::isPossibleMove(ChessSquare& square,
+                                        ChessPiece* piece) const {
 
     // Initialise return value.
     pair<bool, bool> rvalue(false, false);

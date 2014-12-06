@@ -27,15 +27,16 @@ class ChessPiece {
         Color color;
         string name;
         string symbol;
-        const ChessSquare* square;
+        ChessSquare* square;
 
     public:
 
         // Constructor:
         // ============
         ChessPiece();
+        ChessPiece(const ChessPiece& other);
         ChessPiece(Color color);
-        ChessPiece(Color color, ChessSquare* square);
+        ChessPiece(Color color, const ChessSquare& square);
 
         // Copy Constructor:
         // =================
@@ -49,14 +50,15 @@ class ChessPiece {
 
         // Method: setSquare
         // =================
-        // Takes a ChessSquare and sets it as the square
-        // attribute of this ChessPiece.
-        void setSquare(const ChessSquare* cs);
+        // Takes a ChessSquare and sets it as the
+        // square attribute of this ChessPiece.
+        void setSquare(ChessSquare& square);
+        void setSquare(ChessSquare* square);
 
         // Method: getSquare
         // =================
         // Returns the square attribute of this ChessPiece.
-        const ChessSquare* getSquare();
+        ChessSquare* getSquare();
 
         // Method: print
         // =============
@@ -64,12 +66,16 @@ class ChessPiece {
 
         // Method: isPossibleMove
         // ======================
-        virtual pair<bool, bool> isPossibleMove(const ChessSquare& square,
-                                             ChessPiece* piece) const;
+        virtual pair<bool, bool> isPossibleMove(ChessSquare& square,
+                                                ChessPiece* piece) const;
 
         // Method: getColor
         // ================
         Color getColor();
+
+        // Method: getSymbol
+        // =================
+        string getSymbol() const;
 
         // Method: getColor
         // ================
@@ -77,7 +83,7 @@ class ChessPiece {
 
         // Operator: <<
         // ============
-        friend ostream& operator<<(ostream& os, ChessPiece piece);
+        friend ostream& operator<<(ostream& os, const ChessPiece& piece);
 };
 
 // Operator: <<

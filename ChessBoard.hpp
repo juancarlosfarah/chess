@@ -16,7 +16,6 @@ typedef pair<ChessSquare, ChessPiece*> Position;
 typedef map<ChessSquare, ChessPiece*> Board;
 typedef Board::iterator BoardIterator;
 typedef Board::const_iterator BoardConstIterator;
-typedef pair<ChessSquare, bool> KingTracker;
 
 class ChessBoard {
 
@@ -26,9 +25,9 @@ class ChessBoard {
         Board board;
         Color turn;
 
-        // Tracks position and check status of each King.
-        KingTracker whiteKing;
-        KingTracker blackKing;
+        // Tracks position of each King.
+        ChessSquare whiteKingSquare;
+        ChessSquare blackKingSquare;
 
         // Method: init
         // ============
@@ -58,24 +57,48 @@ class ChessBoard {
 
         // Method: updateKingSquare
         // ========================
-        void updateKingSquare(const ChessSquare& source,
-                              const ChessSquare& destination);
+        void updateKingSquare(ChessSquare& source,
+                              ChessSquare& destination);
+
+        // Method: update
+        // ==============
+        void update(ChessPiece* sourcePiece, ChessPiece* destinationPiece,
+                    ChessSquare& sourceSquare,
+                    ChessSquare& destinationSquare);
+        
+        // Method: update
+        // ==============
+        void reverse(ChessPiece* sourcePiece, ChessPiece* destinationPiece,
+                     ChessSquare& sourceSquare,
+                     ChessSquare& destinationSquare);
 
         // Method: isObstructed
         // ====================
-        bool isObstructed(const ChessSquare& source,
-                          const ChessSquare& destination) const;
+        bool isObstructed(ChessSquare& source,
+                          ChessSquare& destination) const;
 
         // Method: isInCheck
         // =================
         bool isInCheck(Color color) const;
 
+        // Method: isInCheckmate
+        // ====================
+        bool isInCheckmate(Color color, ChessSquare& square) const;
+
         // Method: isPossibleMove
         // ======================
-        bool isPossibleMove(const ChessSquare& sourceSquare,
-                            const ChessSquare& destinationSquare,
+        bool isPossibleMove(ChessSquare& sourceSquare,
+                            ChessSquare& destinationSquare,
                             ChessPiece* sourcePiece,
                             ChessPiece* destinationPiece) const;
+
+        // Method: isValidMove
+        // ===================
+        bool isValidMove(ChessSquare& sourceSquare,
+                         ChessSquare& destinationSquare,
+                         ChessPiece* sourcePiece,
+                         ChessPiece* destinationPiece,
+                         stringstream& ssSuccess, bool isQuiet);
 
         // Method: printTopLine
         // ====================
@@ -115,15 +138,15 @@ class ChessBoard {
         // ===================
         ChessSet getChessSet() const;
 
-        // Method: getKingTracker
-        // ======================
-        KingTracker getKingTracker(Color color) const;
+        // Method: getKingSquare
+        // =====================
+        const ChessSquare getKingSquare(Color color) const;
 
         // Method: getKingStartSquare
         // ==========================
         // This method is used to define the default
         // start square for the black and white Kings.
-        ChessSquare getKingStartSquare(Color color) const;
+        const ChessSquare getKingStartSquare(Color color) const;
 
         // Method: print
         // =============

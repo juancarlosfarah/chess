@@ -25,16 +25,16 @@ class Rook : public ChessPiece {
         // ============
         Rook();
         Rook(Color color);
-        Rook(Color color, ChessSquare* square);
+        Rook(Color color, const ChessSquare& square);
 
         // Destructor:
         // ===========
         ~Rook();
 
         // Method: isPossibleMove
-        // ===================
-        pair<bool, bool> isPossibleMove(const ChessSquare& square,
-                                     ChessPiece* piece) const;
+        // ======================
+        pair<bool, bool> isPossibleMove(ChessSquare& square,
+                                        ChessPiece* piece) const;
 
         //// Method: getSymbol
         //// =================

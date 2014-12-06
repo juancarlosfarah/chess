@@ -26,16 +26,15 @@ class Pawn : public ChessPiece {
         // ============
         Pawn();
         Pawn(Color color);
-        Pawn(Color color, ChessSquare* square);
-
+        Pawn(Color color, const ChessSquare& square);
         // Destructor:
         // ===========
         ~Pawn();
 
         // Method: isPossibleMove
-        // ===================
-        pair<bool, bool> isPossibleMove(const ChessSquare& square,
-                                     ChessPiece* piece) const;
+        // ======================
+        pair<bool, bool> isPossibleMove(ChessSquare& square,
+                                        ChessPiece* piece) const;
 
         //// Method: getSymbol
         //// =================
@@ -43,7 +42,7 @@ class Pawn : public ChessPiece {
 
         // Operator: <<
         // ============
-        friend ostream& operator<<(ostream& os, Pawn pawn);
+        friend ostream& operator<<(ostream& os, const Pawn& pawn);
 };
 
 #endif

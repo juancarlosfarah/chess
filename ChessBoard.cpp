@@ -27,8 +27,7 @@ void ChessBoard::init() {
         for (int rank = 1; rank <= 8; ++rank) {
             char file = static_cast<char>(i);
             try {
-                ChessSquare square = ChessSquare(file, rank);
-                Position position(square, nullptr);
+                Position position(ChessSquare(file, rank), nullptr);
                 this->board.insert(position);
             } catch (InvalidCoordinatesException& e) {
                 cerr << "ERROR! Caught InvalidCoordinatesException "
@@ -70,8 +69,7 @@ void ChessBoard::arrangeSide(Color color) {
     while (i != side->end()) {
         //TODO: Figure out the pointer stuff.
         ChessPiece* piece = *i;
-        ChessSquare square(*((*i)->getSquare()));
-        this->board[square] = piece;
+        this->board[*(piece->getSquare())] = piece;
         ++i;
     }
 }
@@ -83,12 +81,9 @@ void ChessBoard::arrangeSide(Color color) {
 void ChessBoard::startGame() {
     this->turn = White;
 
-    // Initialise the members that track
-    // the position and state of the kings.
-    ChessSquare whiteKingSquare('E', 1);
-    ChessSquare blackKingSquare('E', 8);
-    this->whiteKing = KingTracker(whiteKingSquare, false);
-    this->blackKing = KingTracker(blackKingSquare, false);
+    // Get pointers to the squares for the kings on the board.
+    this->whiteKingSquare = this->getKingStartSquare(White);
+    this->blackKingSquare = this->getKingStartSquare(Black);
 
     // Notify client that a new game has started.
     cout << "A new chess game is started!" << endl;
@@ -106,8 +101,9 @@ void ChessBoard::switchTurns() {
 // =========================
 //
 bool ChessBoard::submitMove(string source, string destination) {
-    ChessSquare sourceSquare = ChessSquare(source);
-    BoardIterator i = this->board.find(sourceSquare);
+
+    BoardIterator i = this->board.find(ChessSquare(source));
+
     // If the source ChessSquare is not on the board, then the
     // ChessBoard might have been corrupted. Notify client.
     if (i == this->board.end()) {
@@ -117,33 +113,28 @@ bool ChessBoard::submitMove(string source, string destination) {
         return false;
     }
 
+    // Get ChessSquare and ChessPiece at provided source.
     // Return false and notify client if the square is empty.
+    ChessSquare sourceSquare = i->first;
+    ChessPiece* sourcePiece = i->second;
     if (i->second == nullptr) {
         cout << "There is no piece at position "
              << sourceSquare << "!" << endl;
         return false;
     }
-    // Get chess piece at source square.
-    ChessPiece* sourcePiece = i->second;
-    string sourcePieceName = sourcePiece->getName();
-    Color sourcePieceColor = sourcePiece->getColor();
 
     // If the piece in the source square is not of the same color as
     // the player whose turn it is to play, notify and return false.
+    Color sourcePieceColor = sourcePiece->getColor();
     if (sourcePieceColor != this->turn) {
         cout << "It is not " << sourcePieceColor << "'s "
              << "turn to move!" << endl;
         return false;
     }
 
-    // These streams will be used to inform the client of the move.
-    stringstream ssSuccess;
-    stringstream ssError;
-
     // If the destination ChessSquare is not on the board, then
     // the ChessBoard might have been corrupted. Notify client.
-    ChessSquare destinationSquare = ChessSquare(destination);
-    BoardIterator j = this->board.find(destinationSquare);
+    BoardIterator j = this->board.find(ChessSquare(destination));
     if (j == this->board.end()) {
         cout << "ERROR! Source ChessSquare is not on the board. It's "
              << "possible that this ChessBoard has been corrupted."
@@ -151,66 +142,26 @@ bool ChessBoard::submitMove(string source, string destination) {
         return false;
     }
 
-    // This is the default error message for
-    // invalid moves caught after this state.
-    ssError << sourcePieceColor << "'s " << sourcePieceName
-            << " cannot move to " << destinationSquare << "!";
-
-    // Get chess piece at destination square. This will
-    // be a nullptr if the destination square is empty.
+    // Get ChessSquare and ChessPiece at destination square. The
+    // second will be a nullptr if the destination square is empty.
+    ChessSquare destinationSquare = j->first;
     ChessPiece* destinationPiece = j->second;
 
-    // Ensure that the move is possible before validating
-    // that it does not leave the King in check.
-    if (!this->isPossibleMove(sourceSquare, destinationSquare,
-                              sourcePiece, destinationPiece)) {
-        cout << ssError.str() << endl;
-        return false;
-    }
+    // This stream will be used to inform the client of a valid move.
+    stringstream ssSuccess;
 
-    // Prepare scenario before confirming that the move is
-    // fully valid, i.e. it does not leave the King in check.
-    // Also update KingSquare if applicable.
-    this->board[destinationSquare] = sourcePiece;
-    this->board[sourceSquare] = nullptr;
-    sourcePiece->setSquare(&(j->first));
-    updateKingSquare(sourceSquare, destinationSquare);
-
-
-    // Add information to the success case stringstream.
-    ssSuccess << sourcePieceColor << "'s "
-              << sourcePieceName << " moves from "
-              << sourceSquare << " to " << destinationSquare;
-
-    // If the destination square contained a piece, then this piece has
-    // now been captured. Set its square property to nullptr and add
-    // information about the capture to the stringstream.
-    if (destinationPiece != nullptr) {
-        destinationPiece->setSquare(nullptr);
-        ssSuccess << " taking " << destinationPiece->getColor()
-                  << "'s " << destinationPiece->getName();
-    }
-
-    // Ensure that the King is not left in check.
-    if (isInCheck(this->turn)) {
-        // Return pieces to their original positions.
-        // Revert KingSquare if applicable.
-        this->board[sourceSquare] = sourcePiece;
-        this->board[destinationSquare] = destinationPiece;
-        sourcePiece->setSquare(&i->first);
-        if (destinationPiece != nullptr) {
-            destinationPiece->setSquare(&j->first);
-        }
-        updateKingSquare(destinationSquare, sourceSquare);
-        // TODO: Add info to error stream?
-        cout << ssError.str() << endl;
-        cout << "This move leaves your King in check." << endl;
+    // Ensure the move is valid.
+    if (!this->isValidMove(sourceSquare, destinationSquare, sourcePiece,
+                           destinationPiece, ssSuccess, false)) {
         return false;
     }
 
     // If the opponent is now in check, notify client.
     if (isInCheck(!this->turn)) {
         ssSuccess << endl << !this->turn << " is in check";
+       // if (isInCheckmate()) {
+       //     
+       // }
     }
 
     // Inform the client about a successful move.
@@ -221,10 +172,133 @@ bool ChessBoard::submitMove(string source, string destination) {
     return true;
 }
 
+// Private Method: isInCheckmate
+// =============================
+//bool ChessBoard::isInCheckmate(Color color, const ChessSquare& square) {
+//
+//    ChessSquare kingSquare = this->getKingSquare(color);
+//
+//    // If the King can move to any adjacent square, it isn't checkmate.
+//    set<ChessSquare> squares = kingSquare.getAdjacentSquares();
+//    set<ChessSquare>::iterator i = squares.begin();
+//    while (i != squares.end()) {
+//        if (
+//    }
+//    if () {
+//
+//    }
+//
+//    // If the square is adjacent, or the attacking piece is a Knight,
+//    // then there is no need to check for obstructing its path, as it's
+//    // not possible.
+//    if (square.isAdjacent(this->getKingSquare(color) ||
+//        true) {
+//        
+//    }
+//
+//    // If the path cannot be blocked, then only way to avoid checkmate
+//    // is if the opponent's attacking piece can be captured.
+//
+//}
+
+// Private Method: isValidMove
+// ===========================
+bool ChessBoard::isValidMove(ChessSquare& sourceSquare,
+                             ChessSquare& destinationSquare,
+                             ChessPiece* sourcePiece,
+                             ChessPiece* destinationPiece,
+                             stringstream& ssSuccess,
+                             bool isQuiet) {
+
+    string sourcePieceName = sourcePiece->getName();
+    Color sourcePieceColor = sourcePiece->getColor();
+
+    // This is the default error message for invalid moves caught.
+    stringstream ssErr;
+    ssErr << sourcePieceColor << "'s " << sourcePieceName
+          << " cannot move to " << destinationSquare << "!";
+
+    // Ensure that the move is possible before validating
+    // that it does not leave the King in check.
+    if (!this->isPossibleMove(sourceSquare, destinationSquare,
+                              sourcePiece, destinationPiece)) {
+        if (!isQuiet) cout << ssErr.str() << endl;
+        return false;
+    }
+
+    // Prepare scenario before confirming that the move is
+    // fully valid, i.e. it does not leave the King in check.
+    // Also update KingSquare if applicable.
+    this->update(sourcePiece, destinationPiece,
+                 sourceSquare, destinationSquare);
+
+    // Add information to the success case stringstream.
+    if (!isQuiet) {
+        ssSuccess << sourcePieceColor << "'s "
+                  << sourcePieceName << " moves from "
+                  << sourceSquare << " to " << destinationSquare;
+    }
+
+    // If the destination square contained a piece, add
+    // information about the capture to the stringstream.
+    if (destinationPiece != nullptr && !isQuiet) {
+        ssSuccess << " taking " << destinationPiece->getColor()
+                  << "'s " << destinationPiece->getName();
+    }
+
+    // Ensure that the King is not left in check.
+    if (this->isInCheck(this->turn)) {
+        // Return pieces to their original positions.
+        this->reverse(sourcePiece, destinationPiece,
+                      sourceSquare, destinationSquare);
+        if (!isQuiet) {
+            cout << ssErr.str() << endl;
+            // TODO: Add info to error stream?
+            cout << "This move leaves your King in check." << endl;
+        }
+        return false;
+    }
+    
+    return true;
+}
+
+// Private Method: update
+// ======================
+void ChessBoard::update(ChessPiece* sourcePiece,
+                        ChessPiece* destinationPiece,
+                        ChessSquare& sourceSquare,
+                        ChessSquare& destinationSquare) {
+
+    this->board[destinationSquare] = sourcePiece;
+    this->board[sourceSquare] = nullptr;
+    sourcePiece->setSquare(destinationSquare);
+    if (destinationPiece != nullptr) {
+        destinationPiece->setSquare(nullptr);
+    }
+    updateKingSquare(sourceSquare, destinationSquare);
+}
+
+// Private Method: reverse
+// =======================
+void ChessBoard::reverse(ChessPiece* sourcePiece,
+                         ChessPiece* destinationPiece,
+                         ChessSquare& sourceSquare,
+                         ChessSquare& destinationSquare) {
+
+    this->board[sourceSquare] = sourcePiece;
+    this->board[destinationSquare] = destinationPiece;
+    sourcePiece->setSquare(sourceSquare);
+    if (destinationPiece != nullptr) {
+        destinationPiece->setSquare(destinationSquare);
+    }
+    updateKingSquare(destinationSquare, sourceSquare);
+}
+
+
 // Private Method: isPossibleMove
 // ==============================
-bool ChessBoard::isPossibleMove(const ChessSquare& sourceSquare,
-                                const ChessSquare& destinationSquare,
+bool ChessBoard::isPossibleMove(ChessSquare& sourceSquare,
+                                ChessSquare& destinationSquare,
                                 ChessPiece* sourcePiece,
                                 ChessPiece* destinationPiece) const {
 
@@ -256,8 +330,8 @@ bool ChessBoard::isPossibleMove(const ChessSquare& sourceSquare,
 // Private Method: isObstructed
 // ============================
 // Ensure that the move is unobstructed.
-bool ChessBoard::isObstructed(const ChessSquare& source,
-                              const ChessSquare& destination) const {
+bool ChessBoard::isObstructed(ChessSquare& source,
+                              ChessSquare& destination) const {
 
     // For moves in straight lines spanning more than one square,
     // ensure that there is no piece blocking the way between the
@@ -274,22 +348,21 @@ bool ChessBoard::isObstructed(const ChessSquare& source,
         }
         ++i;
     }
-
     return false;
 }
 
 // Private Method: updateKingSquare
 // ================================
 // This method takes two ChessSquare objects and if the first
-// contains a King, it updates the ChessSquare in that King's
-// KingTracker with the second ChessSquare.
-void ChessBoard::updateKingSquare(const ChessSquare& source,
-                                  const ChessSquare& destination) {
+// contains a King, it updates the ChessSquare for that King
+// with the ChessSquare provided as a second argument.
+void ChessBoard::updateKingSquare(ChessSquare& source,
+                                  ChessSquare& destination) {
 
-    if (this->whiteKing.first == source) {
-        this->whiteKing.first = destination;
-    } else if (this->blackKing.first == source) {
-        this->blackKing.first = destination;
+    if (this->whiteKingSquare == source) {
+        this->whiteKingSquare = destination;
+    } else if (this->blackKingSquare == source) {
+        this->blackKingSquare = destination;
     }
 }
 
@@ -298,7 +371,7 @@ void ChessBoard::updateKingSquare(const ChessSquare& source,
 bool ChessBoard::isInCheck(Color color) const {
 
     // Get this color's King's position.
-    ChessSquare kingSquare = this->getKingTracker(color).first;
+    ChessSquare kingSquare = this->getKingSquare(color);
     BoardConstIterator i = this->board.find(kingSquare);
     ChessPiece* king = i->second;
 
@@ -309,11 +382,14 @@ bool ChessBoard::isInCheck(Color color) const {
     ChessSideConstIterator j = opponents->begin();
     while (j != opponents->end()) {
         ChessPiece* opponent = *j;
-        const ChessSquare* opponentSquare = opponent->getSquare();
+        ChessSquare* opponentSquare = opponent->getSquare();
+        // TODO: Debug
+        //cout << *opponent << "   " << *opponentSquare << endl;
         if (opponentSquare != nullptr &&
-            this->isPossibleMove(*(opponentSquare),
-                                 kingSquare,
+            this->isPossibleMove(*opponentSquare, kingSquare,
                                  opponent, king)) {
+            //TODO: Debug
+            //cout << *opponent << *opponentSquare << endl;
             return true;
         }
         ++j;
@@ -342,37 +418,42 @@ Board ChessBoard::getBoard() const {
     return this->board;
 }
 
-// Public Method: getKingTracker
-// =============================
-KingTracker ChessBoard::getKingTracker(Color color) const {
+// Public Method: getKingSquare
+// ============================
+const ChessSquare ChessBoard::getKingSquare(Color color) const {
     switch (color) {
         case White:
-            return this->whiteKing;
-            break;
+            return this->whiteKingSquare;
         case Black:
-            return this->blackKing;
+            return this->blackKingSquare;
     }
 
-    // Default to returning White's KingTracker.
-    return this->whiteKing;
+    // Default to returning White's King ChessSquare,
+    // but issue a warning to the client just in case.
+    cout << "WARNING! Color argument to ChessBoard::getKingSquare did "
+         << "not match Black or White. Check for possible corruption."
+         << endl;
+    return this->whiteKingSquare;
 }
 
 // Public Method: getKingStartSquare
 // =================================
-ChessSquare ChessBoard::getKingStartSquare(Color color) const {
+const ChessSquare ChessBoard::getKingStartSquare(Color color) const {
     const string whiteDefault = "E1";
     const string blackDefault = "E8";
 
     switch (color) {
         case White:
             return ChessSquare(whiteDefault);
-            break;
         case Black:
             return ChessSquare(blackDefault);
     }
 
-    // Default to returning the White
-    // King's default start square.
+    // Default to returning White's King start ChessSquare,
+    // but issue a warning to the client just in case.
+    cout << "WARNING! Color argument to ChessBoard::getKingSquare did "
+         << "not match Black or White. Check for possible corruption."
+         << endl;
     return ChessSquare(whiteDefault);
 }
 

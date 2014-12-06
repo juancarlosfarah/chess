@@ -10,19 +10,33 @@
 // ============
 ChessPiece::ChessPiece() {};
 
-ChessPiece::ChessPiece(Color c, ChessSquare* p) : color(c), square(p) {
+ChessPiece::ChessPiece(const ChessPiece& other) {
+    this->name = other.name;
+    this->color = other.color;
+    this->symbol = other.symbol;
+    this->square = other.square;
+}
+
+ChessPiece::ChessPiece(Color c, const ChessSquare& square) : color(c) {
     this->name = "Piece";
     this->initSymbol(c);
+    this->square = new ChessSquare(square);
 }
 
 ChessPiece::ChessPiece(Color c) : color(c) {
     this->name = "Piece";
     this->initSymbol(c);
+    this->square = nullptr;
 }
 
 // Destructor:
 // ===========
-ChessPiece::~ChessPiece() {}
+ChessPiece::~ChessPiece() {
+    if (this->square != nullptr) {
+        delete this->square;
+    }
+    this->square = nullptr;
+}
 
 // Private Method: initSymbol
 // ============================
@@ -34,20 +48,34 @@ void ChessPiece::initSymbol(Color color) {
 // ========================
 // Takes a ChessSquare and sets it as the
 // square attribute of this ChessPiece.
-void ChessPiece::setSquare(const ChessSquare* cs) {
-    this->square = cs;
+void ChessPiece::setSquare(ChessSquare& square) {
+    if (this->square != nullptr) {
+        delete this->square;
+    }
+    this->square = new ChessSquare(square);
+}
+
+// Public Method: setSquare
+// ========================
+// Takes a ChessSquare and sets it as the
+// square attribute of this ChessPiece.
+void ChessPiece::setSquare(ChessSquare* square) {
+    if (this->square != nullptr) {
+        delete this->square;
+    }
+    this->square = (square == nullptr) ? nullptr : new ChessSquare(square);
 }
 
 // Public Method: getSquare
 // ========================
 // Returns the square attribute of this ChessPiece.
-const ChessSquare* ChessPiece::getSquare() {
+ChessSquare* ChessPiece::getSquare() {
     return this->square;
 }
 
 // Public Method: isPossibleMove
 // =============================
-pair<bool, bool> ChessPiece::isPossibleMove(const ChessSquare& square,
+pair<bool, bool> ChessPiece::isPossibleMove(ChessSquare& square,
                                             ChessPiece* piece) const {
 
     // Initialise return value pair.
@@ -61,7 +89,9 @@ pair<bool, bool> ChessPiece::isPossibleMove(const ChessSquare& square,
 
         // TODO: Improve cout and remove invalid code.
         cout << "Invalid move." << endl;
-        cout << *piece << " cannot attack " << *this << endl;
+        if (piece != nullptr) {
+            cout << *piece << " cannot attack " << *this << endl;
+        }
         rvalue.first = false;
     }
     return rvalue;
@@ -71,6 +101,12 @@ pair<bool, bool> ChessPiece::isPossibleMove(const ChessSquare& square,
 // =======================
 Color ChessPiece::getColor() {
     return this->color;
+}
+
+// Public Method: getSymbol
+// ========================
+string ChessPiece::getSymbol() const {
+    return this->symbol;
 }
 
 // Public Method: getName
@@ -87,7 +123,7 @@ void ChessPiece::print() {
 
 // Friend Operator: <<
 // ===================
-ostream& operator<<(ostream& os, ChessPiece piece) {
+ostream& operator<<(ostream& os, const ChessPiece& piece) {
     os << piece.symbol;
     return os;
 }

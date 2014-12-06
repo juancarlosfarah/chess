@@ -44,6 +44,7 @@ class ChessSquare {
         // Constructor: Copy
         // =================
         ChessSquare(const ChessSquare& other);
+        ChessSquare(ChessSquare* other);
 
         // Constructor:
         // ============
@@ -61,6 +62,10 @@ class ChessSquare {
         // are invalid, it throws an InvalidCoordinatesException.
         ChessSquare(char file, int rank)
                     throw(InvalidCoordinatesException&);
+
+        // Destructor:
+        // ===========
+        ~ChessSquare();
 
         // Method: getFile
         // ===============

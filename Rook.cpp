@@ -16,7 +16,7 @@ Rook::Rook(Color color) : ChessPiece(color) {
     this->initSymbol(color);
 }
 
-Rook::Rook(Color c, ChessSquare* cs) : ChessPiece(c, cs) {
+Rook::Rook(Color c, const ChessSquare& cs) : ChessPiece(c, cs) {
     this->name = "Rook";
     this->initSymbol(c);
 }
@@ -32,9 +32,9 @@ void Rook::initSymbol(Color color) {
 }
 
 // Public Method: isPossibleMove
-// ==========================
-pair<bool, bool> Rook::isPossibleMove(const ChessSquare& square,
-                                   ChessPiece* piece) const {
+// =============================
+pair<bool, bool> Rook::isPossibleMove(ChessSquare& square,
+                                      ChessPiece* piece) const {
 
     // Initialise return value.
     pair<bool, bool> rvalue(false, false);

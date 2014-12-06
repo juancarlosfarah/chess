@@ -46,7 +46,7 @@ void ChessSet::initSide(Color color) {
             side = &(this->blacks);
             rank = 8 - (i >= 8);
         }
-        ChessSquare* square = new ChessSquare(file, rank);
+        ChessSquare square(file, rank);
         ChessPiece* piece;
         if (rank == 2 || rank == 7) {
             piece = new Pawn(color, square);
@@ -62,8 +62,6 @@ void ChessSet::initSide(Color color) {
             piece = new King(color, square);
         }
         side->at(i) = piece;
-        // TODO: pointer. Does this make sense?
-        square = nullptr;
     }
 }
 
@@ -95,13 +93,13 @@ const ChessSide* ChessSet::getBlacks() const {
 void ChessSet::print() const {
     ChessSideConstIterator i = this->whites.begin();
     while (i != this->whites.end()) {
-        cout << **i;
+        cout << **i << " " << (*i)->getSquare() << endl;
         ++i;
     }
     cout << endl;
     i = this->blacks.begin();
     while (i != this->blacks.end()) {
-        cout << **i;
+        cout << **i << " " << (*i)->getSquare() << endl;
         ++i;
     }
     cout << endl;

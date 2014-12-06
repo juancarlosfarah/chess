@@ -26,19 +26,15 @@ class King : public ChessPiece {
         // ============
         King();
         King(Color color);
-        King(Color color, ChessSquare* square);
+        King(Color color, const ChessSquare& square);
 
         // Destructor:
         // ===========
         ~King();
 
-        //// Method: getSymbol
-        //// =================
-        //string getSymbol();
-
         // Method: isPossibleMove
         // ===================
-        pair<bool, bool> isPossibleMove(const ChessSquare& square,
+        pair<bool, bool> isPossibleMove(ChessSquare& square,
                                      ChessPiece* piece) const;
 
         // Operator: <<

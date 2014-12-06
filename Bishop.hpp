@@ -26,7 +26,7 @@ class Bishop : public ChessPiece {
         // ============
         Bishop();
         Bishop(Color color);
-        Bishop(Color color, ChessSquare* square);
+        Bishop(Color color, const ChessSquare& square);
 
         // Destructor:
         // ===========
@@ -37,9 +37,9 @@ class Bishop : public ChessPiece {
         //string getSymbol();
 
         // Method: isPossibleMove
-        // ===================
-        pair<bool, bool> isPossibleMove(const ChessSquare& square,
-                                     ChessPiece* piece) const;
+        // ======================
+        pair<bool, bool> isPossibleMove(ChessSquare& square,
+                                        ChessPiece* piece) const;
 
         // Operator: <<
         // ============

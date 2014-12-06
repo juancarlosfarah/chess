@@ -22,6 +22,13 @@ ChessSquare::ChessSquare(const ChessSquare& other) {
     this->file = other.file;
 }
 
+// Constructor: Copy
+// =================
+ChessSquare::ChessSquare(ChessSquare* other) {
+    this->rank = other->rank;
+    this->file = other->file;
+}
+
 // Constructor:
 // ============
 ChessSquare::ChessSquare(string coords)
@@ -55,6 +62,11 @@ ChessSquare::ChessSquare(char file, int rank)
         throw InvalidCoordinatesException();
     }
 }
+
+// Destructor:
+// ===========
+ChessSquare::~ChessSquare() {}
+
 
 // Public Method: getFile
 // ======================

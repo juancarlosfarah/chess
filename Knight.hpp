@@ -26,7 +26,7 @@ class Knight : public ChessPiece {
         // ============
         Knight();
         Knight(Color color);
-        Knight(Color color, ChessSquare* square);
+        Knight(Color color, const ChessSquare& square);
 
         // Destructor:
         // ===========
@@ -37,9 +37,9 @@ class Knight : public ChessPiece {
         //string getSymbol();
 
         // Method: isPossibleMove
-        // ===================
-        pair<bool, bool> isPossibleMove(const ChessSquare& square,
-                                     ChessPiece* piece) const;
+        // ======================
+        pair<bool, bool> isPossibleMove(ChessSquare& square,
+                                        ChessPiece* piece) const;
 
         // Operator: <<
         // ============

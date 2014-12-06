@@ -15,7 +15,7 @@ Pawn::Pawn(Color color) : ChessPiece(color) {
     this->name = "Pawn";
     this->initSymbol(color);
 }
-Pawn::Pawn(Color c, ChessSquare* cs) : ChessPiece(c, cs) {
+Pawn::Pawn(Color c, const ChessSquare& cs) : ChessPiece(c, cs) {
     this->name = "Pawn";
     this->initSymbol(c);
 }
@@ -27,7 +27,7 @@ Pawn::~Pawn() {}
 
 // Public Method: isPossibleMove
 // =============================
-pair<bool, bool> Pawn::isPossibleMove(const ChessSquare& square,
+pair<bool, bool> Pawn::isPossibleMove(ChessSquare& square,
                                       ChessPiece* piece) const {
 
     // Initialise return value.
@@ -116,7 +116,7 @@ void Pawn::initSymbol(Color color) {
 
 // Friend Operator: <<
 // ===================
-ostream& operator<<(ostream& os, Pawn pawn) { 
-    os << pawn.symbol;
+ostream& operator<<(ostream& os, const Pawn& pawn) { 
+    os << pawn.getSymbol();
     return os; 
 }

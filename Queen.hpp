@@ -26,7 +26,7 @@ class Queen : public ChessPiece {
         // ============
         Queen();
         Queen(Color color);
-        Queen(Color color, ChessSquare* square);
+        Queen(Color color, const ChessSquare& square);
 
         // Destructor:
         // ===========
@@ -37,9 +37,9 @@ class Queen : public ChessPiece {
         //string getSymbol();
 
         // Method: isPossibleMove
-        // ===================
-        pair<bool, bool> isPossibleMove(const ChessSquare& square,
-                                     ChessPiece* piece) const;
+        // ======================
+        pair<bool, bool> isPossibleMove(ChessSquare& square,
+                                        ChessPiece* piece) const;
 
         // Operator: <<
         // ============
