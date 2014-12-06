@@ -27,21 +27,13 @@ class ChessSquare {
         // Takes a char and returns a bool indicating if it is a valid
         // symbol for a file, i.e. if it is a letter between A and H,
         // inclusive. Note this method is case insensitive.
-        bool isValidFile(char file);
-
-        // TODO: Eliminate!
-        // Method: isValidRank
-        // ===================
-        // Takes a char and returns a bool indicating if it is a valid
-        // symbol for a rank, i.e. if it is an integer between 1 and 8,
-        // inclusive.
-        bool isValidRank(char rank);
+        bool isValidFile(char file) const;
 
         // Method: isValidRank
         // ===================
         // Takes an int and returns a bool indicating if it is a valid
         // symbol for a file, i.e. it's an int between 1 and 8, inclusive.
-        bool isValidRank(int rank);
+        bool isValidRank(int rank) const;
 
     public:
 
@@ -80,7 +72,6 @@ class ChessSquare {
         // Returns the rank property of this ChessSquare.
         int getRank() const;
 
-
         // Method: isDiagonalFrom
         // ======================
         bool isDiagonalFrom(const ChessSquare& other) const;
@@ -115,6 +106,10 @@ class ChessSquare {
         // =========================
         set<ChessSquare> getSquaresBetween(const ChessSquare& other) const;
 
+        // Method: getAdjacentSquares
+        // ==========================
+        set<ChessSquare> getAdjacentSquares() const;
+
         // Method: distance
         // ================
         // Takes a const ChessSquare by reference and returns an integer
@@ -131,7 +126,7 @@ class ChessSquare {
 
         // Operator: <<
         // ============
-        friend ostream& operator<<(ostream& os, const ChessSquare square);
+        friend ostream& operator<<(ostream& os, const ChessSquare& square);
 };
 
 #endif

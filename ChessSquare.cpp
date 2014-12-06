@@ -75,26 +75,15 @@ int ChessSquare::getRank() const {
 // Takes a char and returns a bool indicating if it is a valid symbol
 // for a file, i.e. if it is a letter between A and H, inclusive.
 // This method is case insensitive.
-bool ChessSquare::isValidFile(char file) {
+bool ChessSquare::isValidFile(char file) const {
     return (file >= 65 && file <= 72);  //TODO: Make case insensitive!
-}
-
-// TODO: Eliminate!
-// Private Method: isValidRank
-// ===========================
-// Takes a char and returns a bool indicating if it is a valid symbol
-// for a file, i.e. if it is an integer between 1 and 8, inclusive.
-bool ChessSquare::isValidRank(char rank) {
-    if (!isdigit(rank)) return false;
-    int rankAsInt = rank - '0';
-    return isValidRank(rankAsInt);
 }
 
 // Private Method: isValidRank
 // ===========================
 // Takes an int and returns a bool indicating if it is a valid symbol
 // for a file, i.e. if it is an integer between 1 and 8, inclusive.
-bool ChessSquare::isValidRank(int rank) {
+bool ChessSquare::isValidRank(int rank) const {
     return (rank >= 1 && rank <= 8);
 }
 
@@ -200,6 +189,63 @@ int ChessSquare::distance(const ChessSquare& other) const {
     return (max(fileDiff, rankDiff) - 1);
 }
 
+// Public Method: getAdjacentSquares
+// =================================
+//
+set<ChessSquare> ChessSquare::getAdjacentSquares() const {
+
+    // Define a set of empty squares and the offset to
+    // be 1, indicating that it is an adjacent square.
+    set<ChessSquare> squares;
+    int offset = 1;
+    bool isValidAbove = false,
+         isValidBelow = false,
+         isValidRight = false,
+         isValidLeft = false;
+
+    int newFile, newRank;
+
+    // Check if squares directly above and below are valid.
+    if (isValidFile(newFile = this->file + offset)) {
+        squares.insert(ChessSquare(this->rank, newFile));
+        isValidAbove = true;
+    }
+    if (isValidFile(newFile = this->file - offset)) {
+        squares.insert(ChessSquare(this->rank, newFile));
+        isValidBelow = true;
+    }
+
+    // Check if squares directly left and right are valid.
+    if (isValidFile(newRank = this->rank + offset)) {
+        squares.insert(ChessSquare(this->file, newRank));
+        isValidRight = true;
+    }
+    if (isValidFile(newRank = this->rank - offset)) {
+        squares.insert(ChessSquare(this->file, newRank));
+        isValidLeft = true;
+    }
+
+    // Check if adjacent diagonals are valid.
+    if (isValidAbove && isValidRight) {
+        squares.insert(ChessSquare(this->file + offset,
+                                   this->rank + offset));
+    }
+    if (isValidAbove && isValidLeft) {
+        squares.insert(ChessSquare(this->file + offset,
+                                   this->rank - offset));
+    }
+    if (isValidBelow && isValidRight) {
+        squares.insert(ChessSquare(this->file - offset,
+                                   this->rank + offset));
+    }
+    if (isValidBelow && isValidLeft) {
+        squares.insert(ChessSquare(this->file - offset,
+                                   this->rank - offset));
+    }
+
+    return squares;
+}
+
 // Public Method: getSquaresBetween
 // ================================
 // Note that if the squares are not in the same rank, file or diagonal
@@ -210,9 +256,6 @@ set<ChessSquare> ChessSquare::getSquaresBetween(const ChessSquare& other)
     // By default, return an empty set of squares.
     set<ChessSquare> squares;
 
-    // TODO: Remove debugging code
-    //cout << "Validating path is clear from "
-    //     << *this << " to " << other << endl;
     if (this->rank == other.rank) {
         int displacement = this->file - other.file;
         int distance = abs(displacement) - 1;
@@ -286,7 +329,7 @@ bool ChessSquare::operator==(const ChessSquare& other) const {
 
 // Friend Operator: <<
 // ===================
-ostream& operator<<(ostream& os, const ChessSquare square) {
+ostream& operator<<(ostream& os, const ChessSquare& square) {
     os << square.file << square.rank;
     return os;
 }
