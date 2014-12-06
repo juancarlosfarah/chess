@@ -9,6 +9,7 @@ using namespace std;
 int main() {
 
     // Test outputting White Pawn.
+    cout << "Testing outputting White Pawn..." << endl;
     Pawn p = Pawn(White);
     stringstream ss;
     ss << p;
@@ -16,6 +17,7 @@ int main() {
     ss.str("");
 
     // Test outputting ChessSquare A1.
+    cout << "Testing outputting A1..." << endl;
     ChessSquare cs('A', 1);
     ss << cs;
     assert(ss.str() == "A1");
@@ -23,6 +25,7 @@ int main() {
     // ==============
     // Test Distances
     // ==============
+    cout << "Testing distances..." << endl;
     ChessSquare cs1('A', 5);
     ChessSquare cs2('C', 4);
     ChessSquare cs3('C', 5);
@@ -47,6 +50,7 @@ int main() {
 
 
     // Create ChessBoard
+    cout << "Testing creating ChessBoard..." << endl;
     ChessBoard cb;
 
     Board board = cb.getBoard();
@@ -58,24 +62,26 @@ int main() {
     // ===================
     bool isValid;
 
+    cout << "Testing ChessPiece dynamics..." << endl;
     // Test if in theory Black Pawn can move E7 to D1.
     // Should fail given a Pawn's allowed moves.
     ChessSquare s1 = ChessSquare("D7");
     ChessSquare d1 = ChessSquare("E1");
-    Pawn bp(Black, &s1);
+    Pawn bp(Black, s1);
     isValid = bp.isPossibleMove(d1, nullptr).first;
     assert(isValid == false);
 
     // Test if in theory Black Pawn can move E7 to D1.
     // if there is an opponent on D1. Should fail given
     // a Pawn's allowed moves.
-    King wk(White, &d1);
+    King wk(White, d1);
     isValid = bp.isPossibleMove(d1, &wk).first;
     assert(isValid == false);
 
     // ==========
     // Test Moves
     // ==========
+    cout << "Testing moves..." << endl;
 
     // Test moving White Pawn E2 to E4.
     isValid = cb.submitMove("E2","E4");
@@ -93,8 +99,8 @@ int main() {
     cb.print();
 
     // Test that Black's KingTracker is unchanged
-    KingTracker bkt = cb.getKingTracker(Black);
-    assert(bkt.first == cb.getKingStartSquare(Black));
+    ChessSquare bkt = cb.getKingSquare(Black);
+    assert(bkt == cb.getKingStartSquare(Black));
 
     // Test moving White Bishop back to F1.
     // Should fail because out of turn play.
@@ -123,8 +129,8 @@ int main() {
     assert(isValid == true);
 
     // Test that White's KingTracker is updated
-    KingTracker wkt = cb.getKingTracker(White);
-    assert(wkt.first == ChessSquare("E2"));
+    ChessSquare wkt = cb.getKingSquare(White);
+    assert(wkt == ChessSquare("E2"));
 
     // Test moving Black Bishop F8 to A3.
     isValid = cb.submitMove("F8","A3");
