@@ -39,7 +39,7 @@ ChessSquare::ChessSquare(string coords)
 
     // Parse the first and second characters in the string and ensure
     // that they are valid. If so set the properties accordingly.
-    if (isValidFile(file) && isValidRank(rank)) {
+    if (this->isValidFile(file) && this->isValidRank(rank)) {
         this->file = file;
         this->rank = rank;
     } else {
@@ -55,7 +55,7 @@ ChessSquare::ChessSquare(string coords)
 ChessSquare::ChessSquare(char file, int rank)
                          throw(InvalidCoordinatesException&) {
 
-    if (isValidFile(file) && isValidRank(rank)) {
+    if (this->isValidFile(file) && this->isValidRank(rank)) {
         this->file = file;
         this->rank = rank;
     } else {
@@ -215,44 +215,44 @@ set<ChessSquare> ChessSquare::getAdjacentSquares() const {
          isValidRight = false,
          isValidLeft = false;
 
-    int newFile, newRank;
+    char newFile;
+    int newRank;
 
     // Check if squares directly above and below are valid.
-    if (isValidFile(newFile = this->file + offset)) {
-        squares.insert(ChessSquare(this->rank, newFile));
+    if (this->isValidRank(newRank = this->rank - offset)) {
+        squares.insert(ChessSquare(this->file, newRank));
         isValidAbove = true;
     }
-    if (isValidFile(newFile = this->file - offset)) {
-        squares.insert(ChessSquare(this->rank, newFile));
+    if (isValidRank(newRank = this->rank + offset)) {
+        squares.insert(ChessSquare(this->file, newRank));
         isValidBelow = true;
     }
 
     // Check if squares directly left and right are valid.
-    if (isValidFile(newRank = this->rank + offset)) {
-        squares.insert(ChessSquare(this->file, newRank));
-        isValidRight = true;
-    }
-    if (isValidFile(newRank = this->rank - offset)) {
-        squares.insert(ChessSquare(this->file, newRank));
+    if (isValidFile(newFile = this->file - offset)) {
+        squares.insert(ChessSquare(newFile, this->rank));
         isValidLeft = true;
     }
-
+    if (isValidFile(newFile = this->file + offset)) {
+        squares.insert(ChessSquare(newFile, this->rank));
+        isValidRight = true;
+    }
     // Check if adjacent diagonals are valid.
     if (isValidAbove && isValidRight) {
         squares.insert(ChessSquare(this->file + offset,
-                                   this->rank + offset));
+                                   this->rank - offset));
     }
     if (isValidAbove && isValidLeft) {
-        squares.insert(ChessSquare(this->file + offset,
+        squares.insert(ChessSquare(this->file - offset,
                                    this->rank - offset));
     }
     if (isValidBelow && isValidRight) {
-        squares.insert(ChessSquare(this->file - offset,
+        squares.insert(ChessSquare(this->file + offset,
                                    this->rank + offset));
     }
     if (isValidBelow && isValidLeft) {
         squares.insert(ChessSquare(this->file - offset,
-                                   this->rank - offset));
+                                   this->rank + offset));
     }
 
     return squares;

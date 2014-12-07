@@ -88,9 +88,9 @@ pair<bool, bool> ChessPiece::isPossibleMove(ChessSquare& square,
         ((piece != nullptr) && (piece->getColor() == this->color))) {
 
         // TODO: Improve cout and remove invalid code.
-        cout << "Invalid move." << endl;
+        // cout << "Invalid move." << endl;
         if (piece != nullptr) {
-            cout << *piece << " cannot attack " << *this << endl;
+             //cout << *piece << " cannot attack " << *this << endl;
         }
         rvalue.first = false;
     }

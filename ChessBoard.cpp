@@ -157,11 +157,14 @@ bool ChessBoard::submitMove(string source, string destination) {
     }
 
     // If the opponent is now in check, notify client.
-    if (isInCheck(!this->turn)) {
+    pair<bool, ChessSquare> response = this->isInCheck(!this->turn);
+    bool isInCheck = response.first;
+    ChessSquare checkSquare = response.second;
+    if (isInCheck) {
         ssSuccess << endl << !this->turn << " is in check";
-       // if (isInCheckmate()) {
-       //     
-       // }
+        if (this->isInCheckmate(!this->turn, checkSquare)) {
+            ssSuccess << "mate";
+        }
     }
 
     // Inform the client about a successful move.
@@ -174,37 +177,91 @@ bool ChessBoard::submitMove(string source, string destination) {
 
 // Private Method: isInCheckmate
 // =============================
-//bool ChessBoard::isInCheckmate(Color color, const ChessSquare& square) {
-//
-//    ChessSquare kingSquare = this->getKingSquare(color);
-//
-//    // If the King can move to any adjacent square, it isn't checkmate.
-//    set<ChessSquare> squares = kingSquare.getAdjacentSquares();
-//    set<ChessSquare>::iterator i = squares.begin();
-//    while (i != squares.end()) {
-//        if (
-//    }
-//    if () {
-//
-//    }
-//
-//    // If the square is adjacent, or the attacking piece is a Knight,
-//    // then there is no need to check for obstructing its path, as it's
-//    // not possible.
-//    if (square.isAdjacent(this->getKingSquare(color) ||
-//        true) {
-//        
-//    }
-//
-//    // If the path cannot be blocked, then only way to avoid checkmate
-//    // is if the opponent's attacking piece can be captured.
-//
-//}
+bool ChessBoard::isInCheckmate(Color color, const ChessSquare& square) {
+
+    ChessSquare kingSquare = this->getKingSquare(color);
+    BoardConstIterator k;
+    k = this->board.find(kingSquare);
+    ChessPiece* king = k->second;
+    
+    // This stringstream is used to consume output and then silence it.
+    stringstream ss;
+
+    // TODO: Delete.
+    // cout << "Attack from: " << square << endl;
+
+    // If the King can move to any adjacent square, it isn't checkmate.
+    set<ChessSquare> squares = kingSquare.getAdjacentSquares();
+    set<ChessSquare>::iterator i = squares.begin();
+    while (i != squares.end()) {
+        ChessSquare destinationSquare = *i;
+        k = this->board.find(destinationSquare);
+        ChessPiece* destinationPiece = k->second;
+        if (isValidMove(kingSquare, destinationSquare, king,
+                        destinationPiece, ss, true)) {
+            // TODO: Delete.
+            // cout << "Escape from " << kingSquare << " to "
+            //      << destinationSquare << endl;
+            return false;
+        }
+        ++i;
+    }
+
+    // If the square is adjacent, or the attacking piece is a Knight,
+    // then there is no need to check for obstructing its path, as it's
+    // not possible.
+    // If the path cannot be blocked, then only way to avoid checkmate
+    // is if the opponent's attacking piece can be captured.
+    set<ChessSquare> blockSquares;
+    if (!square.isAdjacent(kingSquare) &&
+        !square.isKnightHopFrom(kingSquare)) {
+        
+        blockSquares = square.getSquaresBetween(kingSquare);
+    }
+    blockSquares.insert(square);
+    i = blockSquares.begin();
+    while (i != blockSquares.end()) {
+        ChessSquare destinationSquare = *i;
+        
+        // TODO: Delete
+        //cout << "DSquare: " << destinationSquare << endl;
+        
+        k = this->board.find(destinationSquare);
+        ChessPiece* destinationPiece = k->second;
+        const ChessSide* team = this->pieces->getSide(color);
+        ChessSideConstIterator j = team->begin();
+        while (j != team->end()) {
+
+            // Don't consider teammates who have already been
+            // captured, i.e. have nullptr in their square property.
+            ChessPiece* teammate = *j;
+            ChessSquare* teammateSquare = teammate->getSquare();
+            
+            // TODO: Delete
+            //cout << *teammate << " at "; 
+            //if (teammateSquare != nullptr) cout << *teammateSquare <<
+            //    endl;
+
+            if (teammateSquare != nullptr &&
+                this->isValidMove(*teammateSquare, destinationSquare,
+                                  teammate, destinationPiece, ss, true)) {
+            // TODO: Delete.
+            //cout << "Blocked by " << *teammate << " from "
+            //   << *teammateSquare << " to " << destinationSquare << endl;
+                return false;
+            }
+            ++j;
+        }
+        ++i;
+    }
+
+    return true;
+}
 
 // Private Method: isValidMove
 // ===========================
-bool ChessBoard::isValidMove(ChessSquare& sourceSquare,
-                             ChessSquare& destinationSquare,
+bool ChessBoard::isValidMove(ChessSquare sourceSquare,
+                             ChessSquare destinationSquare,
                              ChessPiece* sourcePiece,
                              ChessPiece* destinationPiece,
                              stringstream& ssSuccess,
@@ -247,7 +304,9 @@ bool ChessBoard::isValidMove(ChessSquare& sourceSquare,
     }
 
     // Ensure that the King is not left in check.
-    if (this->isInCheck(this->turn)) {
+    pair<bool, ChessSquare> response = this->isInCheck(sourcePieceColor);
+    bool isInCheck = response.first;
+    if (isInCheck) {
         // Return pieces to their original positions.
         this->reverse(sourcePiece, destinationPiece,
                       sourceSquare, destinationSquare);
@@ -257,6 +316,14 @@ bool ChessBoard::isValidMove(ChessSquare& sourceSquare,
             cout << "This move leaves your King in check." << endl;
         }
         return false;
+    }
+    if (isQuiet) {
+        //TODO: Delete.
+        //cout << "Reversing pieces." << endl;
+        
+        // Return pieces to their original positions.
+        this->reverse(sourcePiece, destinationPiece,
+                      sourceSquare, destinationSquare);
     }
     
     return true;
@@ -269,6 +336,10 @@ void ChessBoard::update(ChessPiece* sourcePiece,
                         ChessSquare& sourceSquare,
                         ChessSquare& destinationSquare) {
 
+    // TODO: Playing Out.
+    //cout << "Playing Out: " << *sourcePiece;
+    //cout << "  From: " << sourceSquare; 
+    //cout << "  To: " << destinationSquare << endl;
     this->board[destinationSquare] = sourcePiece;
     this->board[sourceSquare] = nullptr;
     sourcePiece->setSquare(destinationSquare);
@@ -284,7 +355,10 @@ void ChessBoard::reverse(ChessPiece* sourcePiece,
                          ChessPiece* destinationPiece,
                          ChessSquare& sourceSquare,
                          ChessSquare& destinationSquare) {
-
+    // TODO: Delete.
+    //cout << "Reversing: " << *sourcePiece;
+    //cout << "  Back From: " << destinationSquare; 
+    //cout << "  Back To: " << sourceSquare << endl;
     this->board[sourceSquare] = sourcePiece;
     this->board[destinationSquare] = destinationPiece;
     sourcePiece->setSquare(sourceSquare);
@@ -342,8 +416,8 @@ bool ChessBoard::isObstructed(ChessSquare& source,
         BoardConstIterator j = this->board.find(*i);
         if (j->second != nullptr) {
             // TODO: Remove the following two lines.
-            cout << "Invalid move. Path blocked by "
-                 << *(j->second) << endl;
+            //cout << "Invalid move. Path blocked by "
+            //     << *(j->second) << endl;
             return true;
         }
         ++i;
@@ -368,7 +442,8 @@ void ChessBoard::updateKingSquare(ChessSquare& source,
 
 // Private Method: isInCheck
 // =========================
-bool ChessBoard::isInCheck(Color color) const {
+pair<bool, ChessSquare> ChessBoard::isInCheck(Color color) const {
+    pair<bool, ChessSquare> rvalue;
 
     // Get this color's King's position.
     ChessSquare kingSquare = this->getKingSquare(color);
@@ -390,12 +465,18 @@ bool ChessBoard::isInCheck(Color color) const {
                                  opponent, king)) {
             //TODO: Debug
             //cout << *opponent << *opponentSquare << endl;
-            return true;
+            rvalue.first = true;
+            rvalue.second = *opponentSquare;
+            return rvalue;
         }
         ++j;
     }
 
-    return false;
+    // If the King is not in Check return its square as the second
+    // parameter in the response.
+    rvalue.first = false;
+    rvalue.second = kingSquare;
+    return rvalue;
 }
 
 // Public Method: resetBoard

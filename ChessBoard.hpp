@@ -79,11 +79,11 @@ class ChessBoard {
 
         // Method: isInCheck
         // =================
-        bool isInCheck(Color color) const;
+        pair<bool, ChessSquare> isInCheck(Color color) const;
 
         // Method: isInCheckmate
         // ====================
-        bool isInCheckmate(Color color, ChessSquare& square) const;
+        bool isInCheckmate(Color color, const ChessSquare& square);
 
         // Method: isPossibleMove
         // ======================
@@ -94,8 +94,8 @@ class ChessBoard {
 
         // Method: isValidMove
         // ===================
-        bool isValidMove(ChessSquare& sourceSquare,
-                         ChessSquare& destinationSquare,
+        bool isValidMove(ChessSquare sourceSquare,
+                         ChessSquare destinationSquare,
                          ChessPiece* sourcePiece,
                          ChessPiece* destinationPiece,
                          stringstream& ssSuccess, bool isQuiet);
