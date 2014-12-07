@@ -85,6 +85,10 @@ class ChessBoard {
         // ====================
         bool isInCheckmate(Color color, const ChessSquare& square);
 
+        // Method: isStalemate
+        // ===================
+        bool isStalemate(Color color);
+
         // Method: isPossibleMove
         // ======================
         bool isPossibleMove(ChessSquare& sourceSquare,

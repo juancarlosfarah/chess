@@ -165,6 +165,11 @@ bool ChessBoard::submitMove(string source, string destination) {
         if (this->isInCheckmate(!this->turn, checkSquare)) {
             ssSuccess << "mate";
         }
+    } else {
+        if (this->isStalemate(!this->turn)) {
+            ssSuccess << endl << !this->turn << " cannot move. "
+                      << "Stalemate!" << endl;
+        }
     }
 
     // Inform the client about a successful move.
@@ -257,6 +262,40 @@ bool ChessBoard::isInCheckmate(Color color, const ChessSquare& square) {
 
     return true;
 }
+
+// Private Method: isStalemate
+// ===========================
+bool ChessBoard::isStalemate(Color color) {
+
+    // Used to suppress output to client as this check is silent.
+    stringstream ss;
+
+    // Iterate through all of the pieces of the given color and
+    // check if any of them can move. If so, then it's not stalemate.
+    const ChessSide* side = this->pieces->getSide(color);
+    ChessSideConstIterator i = side->begin();
+    while (i != side->end()) {
+        ChessPiece* sourcePiece = *i;
+        ChessSquare* sourceSquare = sourcePiece->getSquare();
+
+        // Do not consider pieces that have already been captured.
+        if (sourceSquare != nullptr) {
+            BoardIterator j = this->board.begin();
+            while (j != this->board.end()) {
+                ChessSquare destinationSquare = j->first;
+                ChessPiece* destinationPiece = j->second;
+                if (isValidMove(*sourceSquare, destinationSquare,
+                                sourcePiece, destinationPiece, ss, true)){
+                    return false;
+                }
+                ++j;
+            }
+        }
+        ++i;
+    }
+    return true;
+}
+
 
 // Private Method: isValidMove
 // ===========================
