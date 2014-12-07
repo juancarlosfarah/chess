@@ -14,7 +14,12 @@ ChessBoard::ChessBoard() {
 
 // Destructor:
 // ===========
-ChessBoard::~ChessBoard() {}
+ChessBoard::~ChessBoard() {
+
+    // If this ChessBoard has a ChessSet, delete it before destructing.
+    if (this->pieces != nullptr) delete this->pieces;
+    this->pieces = nullptr;
+}
 
 // Private Method: init
 // ====================
@@ -276,15 +281,16 @@ bool ChessBoard::isStalemate(Color color) {
     ChessSideConstIterator i = side->begin();
     while (i != side->end()) {
         ChessPiece* sourcePiece = *i;
-        ChessSquare* sourceSquare = sourcePiece->getSquare();
+        ChessSquare* sourceSquarePtr = sourcePiece->getSquare();
 
         // Do not consider pieces that have already been captured.
-        if (sourceSquare != nullptr) {
+        if (sourceSquarePtr != nullptr) {
+            ChessSquare sourceSquare = *sourceSquarePtr;
             BoardIterator j = this->board.begin();
             while (j != this->board.end()) {
                 ChessSquare destinationSquare = j->first;
                 ChessPiece* destinationPiece = j->second;
-                if (isValidMove(*sourceSquare, destinationSquare,
+                if (isValidMove(sourceSquare, destinationSquare,
                                 sourcePiece, destinationPiece, ss, true)){
                     return false;
                 }
