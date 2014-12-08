@@ -235,13 +235,17 @@ bool ChessBoard::submitMove(string source, string destination) {
     bool isInCheck = response.first;
     ChessSquare checkSquare = response.second;
     if (isInCheck) {
+
+        // If opponent is in check and can't move, it is checkmate.
         ssSuccess << endl << !this->turn << " is in check";
         if (this->isInCheckmate(!this->turn, checkSquare)) {
             ssSuccess << "mate";
             this->isGameOver = true;
         }
     } else {
-        if (this->isStalemate(!this->turn)) {
+
+        // If opponent isn't in check and can't move, it is stalemate.
+        if (!this->hasValidMove(!this->turn)) {
             ssSuccess << endl << !this->turn << " cannot move. "
                       << "Stalemate!" << endl;
             this->isGameOver = true;
@@ -345,18 +349,16 @@ bool ChessBoard::isInCheckmate(Color color, const ChessSquare& square) {
     return true;
 }
 
-// Private Method: isStalemate
-// ===========================
-// Takes a Color and returns true if no pieces of that Color can make a
-// valid move. When used with the Color of the side that is up next,
-// this means that the game has ended in stalemate.
-bool ChessBoard::isStalemate(Color color) {
+// Private Method: hasValidMove
+// ============================
+// Takes a Color and returns true if it can make a valid move.
+bool ChessBoard::hasValidMove(Color color) {
 
     // Used to suppress output to client as this check is silent.
     stringstream ss;
 
-    // Iterate through all of the pieces of the given color and
-    // check if any of them can move. If so, then it's not stalemate.
+    // Iterate through all of the pieces of the given
+    // color and check if any of them can move.
     const ChessSide* side = this->pieces->getSide(color);
     ChessSideConstIterator i = side->begin();
     while (i != side->end()) {
@@ -372,14 +374,14 @@ bool ChessBoard::isStalemate(Color color) {
                 ChessPiece* destinationPiece = j->second;
                 if (isValidMove(sourceSquare, destinationSquare,
                                 sourcePiece, destinationPiece, ss, true)){
-                    return false;
+                    return true;
                 }
                 ++j;
             }
         }
         ++i;
     }
-    return true;
+    return false;
 }
 
 

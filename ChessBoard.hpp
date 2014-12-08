@@ -123,12 +123,11 @@ class ChessBoard {
         // bool indicating if the side of that Color is in checkmate.
         bool isInCheckmate(Color color, const ChessSquare& square);
 
-        // Method: isStalemate
-        // ===================
-        // Takes a Color and returns a bool indicating if no piece of that
-        // Color can make a valid move. When used with the Color of the
-        // side that's up next, it means the game has ended in stalemate.
-        bool isStalemate(Color color);
+        // Method: hasValidMove
+        // ====================
+        // Takes a Color and returns a bool indicating if the side of
+        // the given Color can make a valid move.
+        bool hasValidMove(Color color);
 
         // Method: isPossibleMove
         // ======================
