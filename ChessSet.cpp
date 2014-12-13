@@ -47,7 +47,7 @@ void ChessSet::initSide(Color color) {
             rank = 8 - (i >= 8);
         }
         ChessSquare square(file, rank);
-        ChessPiece* piece;
+        ChessPiece* piece = nullptr;
         if (rank == 2 || rank == 7) {
             piece = new Pawn(color, square);
         } else if (file == 'B' || file == 'G') {
