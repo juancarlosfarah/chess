@@ -1,3 +1,9 @@
+// ==========================================
+// File:    ChessBoard.hpp
+// Author:  Juan Carlos Farah
+// Email:   juancarlos.farah14@imperial.ac.uk
+// ==========================================
+
 #ifndef CHESS_BOARD_HPP
 #define CHESS_BOARD_HPP
 
@@ -19,6 +25,16 @@ typedef map<ChessSquare, ChessPiece*> Board;
 typedef Board::iterator BoardIterator;
 typedef Board::const_iterator BoardConstIterator;
 
+// Class: ChessBoard
+// =================
+// This class defines the data members and methods associated with the
+// ChessBoard object, which brings together the objects needed in order
+// to play a game of chess. The ChessBoard is particularly important in
+// keeping track of the state of the game through its Board. It also
+// receives moves from the client and ensures that they are valid given
+// the state of its Board. The ChessBoard is also in charge of notifying
+// the client when a game is over, indicating if it ended in checkmate
+// or stalemate.
 class ChessBoard {
 
     private:
@@ -110,18 +126,9 @@ class ChessBoard {
 
         // Method: isInCheck
         // =================
-        // This method takes a Color and returns a pair<bool, ChessSquare>
-        // with the first element indicating if the King of said Color
-        // is in check and if so, with the second element containing one
-        // ChessSquare from which the King is being attacked. If it is not
-        // in check, the second element is the King's current ChessSquare.
-        pair<bool, ChessSquare> isInCheck(Color color) const;
-
-        // Method: isInCheckmate
-        // =====================
-        // This method takes a Color and a ChessSquare and returns a
-        // bool indicating if the side of that Color is in checkmate.
-        bool isInCheckmate(Color color, const ChessSquare& square);
+        // This method takes a Color and returns a bool indicating
+        // whether or not the King of the given Color is in check.
+        bool isInCheck(Color color) const;
 
         // Method: hasValidMove
         // ====================
@@ -159,14 +166,18 @@ class ChessBoard {
 
         // Method: printTopLine
         // ====================
+        // This method prints the top line of the ChessBoard.
         void printTopLine() const;
 
         // Method: printMiddleLine
         // =======================
+        // This method prints one of the lines between
+        // the middle rows of the ChessBoard.
         void printMiddleLine() const;
 
         // Method: printBottomLine
         // =======================
+        // This method prints the bottom line of the ChessBoard.
         void printBottomLine() const;
 
     public:
@@ -191,9 +202,9 @@ class ChessBoard {
         // This method resets the chess board back to its initial state.
         void resetBoard();
    
+        // TODO: Delete.
         // Method: getBoard
         // ================
-        // TODO: Delete.
         Board getBoard() const;
 
         // Method: getKingSquare

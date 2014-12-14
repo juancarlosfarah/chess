@@ -1,3 +1,9 @@
+// ==========================================
+// File:    ChessBoard.cpp
+// Author:  Juan Carlos Farah
+// Email:   juancarlos.farah14@imperial.ac.uk
+// ==========================================
+
 #include <iomanip>
 #include <sstream>
 using namespace std;
@@ -108,7 +114,7 @@ void ChessBoard::arrangeSide(Color color) {
 // are ready for a game of chess and notifies the client.
 void ChessBoard::startGame() {
 
-    // If the game was over, it isn't anymore!
+    // Reset isGameOver bool.
     this->isGameOver = false;
 
     // Default is for White to play first.
@@ -151,12 +157,10 @@ bool ChessBoard::submitMove(string source, string destination) {
         ChessSquare square(source);
         i = this->board.find(square);
     } catch (InvalidCoordinatesException& e) {
-
         cout << "ERROR! Caught InvalidCoordinatesException when calling "
              << "ChessSquare constructor for source ChessSquare with "
              << "input=" << source << " in ChessBoard::submitMove."
              << endl;
-
         return false;
     }
 
@@ -196,12 +200,10 @@ bool ChessBoard::submitMove(string source, string destination) {
         ChessSquare square(destination);
         j = this->board.find(square);
     } catch (InvalidCoordinatesException& e) {
-
         cout << "ERROR! Caught InvalidCoordinatesException when calling "
              << "ChessSquare constructor for destination ChessSquare with "
              << "input=" << destination << " in ChessBoard::submitMove."
              << endl;
-
         return false;
     }
 
@@ -231,17 +233,17 @@ bool ChessBoard::submitMove(string source, string destination) {
     // If the opponent is now in check or checkmate, or if the game has
     // ended in stalemate, notify the client. If the game has ended, set
     // the appropriate flags in order to prevent further moves.
-    pair<bool, ChessSquare> response = this->isInCheck(!this->turn);
-    bool isInCheck = response.first;
-    ChessSquare checkSquare = response.second;
-    if (isInCheck) {
+    if (this->isInCheck(!this->turn)) {
+
+        // Inform client that opponent is in check.
+        ssSuccess << endl << !this->turn << " is in check";
 
         // If opponent is in check and can't move, it is checkmate.
-        ssSuccess << endl << !this->turn << " is in check";
-        if (this->isInCheckmate(!this->turn, checkSquare)) {
+        if (!this->hasValidMove(!this->turn)) {
             ssSuccess << "mate";
             this->isGameOver = true;
         }
+
     } else {
 
         // If opponent isn't in check and can't move, it is stalemate.
@@ -250,6 +252,7 @@ bool ChessBoard::submitMove(string source, string destination) {
                       << "Stalemate!" << endl;
             this->isGameOver = true;
         }
+
     }
 
     // Inform the client about a successful move.
@@ -257,94 +260,6 @@ bool ChessBoard::submitMove(string source, string destination) {
 
     // Signal that it's the other player's turn now if the game goes on.
     if (!this->isGameOver) this->switchTurns();
-
-    return true;
-}
-
-// Private Method: isInCheckmate
-// =============================
-// This method takes a Color and a ChessSquare and returns a
-// bool indicating if the side of that Color is in checkmate.
-bool ChessBoard::isInCheckmate(Color color, const ChessSquare& square) {
-
-    ChessSquare kingSquare = this->getKingSquare(color);
-    BoardConstIterator k;
-    k = this->board.find(kingSquare);
-    ChessPiece* king = k->second;
-    
-    // This stringstream is used to consume output and then silence it.
-    stringstream ss;
-
-    // TODO: Delete.
-    // cout << "Attack from: " << square << endl;
-
-    // If the King can move to any adjacent square, it isn't checkmate.
-    set<ChessSquare> squares = kingSquare.getAdjacentSquares();
-    set<ChessSquare>::iterator i = squares.begin();
-    while (i != squares.end()) {
-        ChessSquare destinationSquare = *i;
-        k = this->board.find(destinationSquare);
-        ChessPiece* destinationPiece = k->second;
-        if (isValidMove(kingSquare, destinationSquare, king,
-                        destinationPiece, ss, true)) {
-            // TODO: Delete.
-            // cout << "Escape from " << kingSquare << " to "
-            //      << destinationSquare << endl;
-            return false;
-        }
-        ++i;
-    }
-
-    // If the square is adjacent, or the attacking piece is a Knight,
-    // then there is no need to check for obstructing its path, as it's
-    // not possible. If the path cannot be blocked, then only way to avoid
-    // checkmate is if the opponent's attacking piece can be captured.
-    // Thus include the attacking square in the set of blockSquares.
-    set<ChessSquare> blockSquares;
-    if (!square.isAdjacent(kingSquare) &&
-        !square.isKnightHopFrom(kingSquare)) {
-        
-        blockSquares = square.getSquaresBetween(kingSquare);
-    }
-    blockSquares.insert(square);
-
-    // Iterate through the squares that might block the check and
-    // see if any of the pieces of this Color can reach them.
-    i = blockSquares.begin();
-    while (i != blockSquares.end()) {
-        ChessSquare destinationSquare = *i;
-        
-        // TODO: Delete
-        //cout << "DSquare: " << destinationSquare << endl;
-        
-        k = this->board.find(destinationSquare);
-        ChessPiece* destinationPiece = k->second;
-        const ChessSide* team = this->pieces->getSide(color);
-        ChessSideConstIterator j = team->begin();
-        while (j != team->end()) {
-
-            // Don't consider teammates who have already been
-            // captured, i.e. have nullptr in their square property.
-            ChessPiece* teammate = *j;
-            ChessSquare* teammateSquare = teammate->getSquare();
-            
-            // TODO: Delete
-            //cout << *teammate << " at "; 
-            //if (teammateSquare != nullptr) cout << *teammateSquare <<
-            //    endl;
-
-            if (teammateSquare != nullptr &&
-                this->isValidMove(*teammateSquare, destinationSquare,
-                                  teammate, destinationPiece, ss, true)) {
-            // TODO: Delete.
-            //cout << "Blocked by " << *teammate << " from "
-            //   << *teammateSquare << " to " << destinationSquare << endl;
-                return false;
-            }
-            ++j;
-        }
-        ++i;
-    }
 
     return true;
 }
@@ -437,23 +352,16 @@ bool ChessBoard::isValidMove(ChessSquare sourceSquare,
     }
 
     // Ensure that the King is not left in check.
-    pair<bool, ChessSquare> response = this->isInCheck(sourcePieceColor);
-    bool isInCheck = response.first;
-    if (isInCheck) {
+    if (this->isInCheck(sourcePieceColor)) {
         // Return pieces to their original positions.
         this->reverse(sourcePiece, destinationPiece,
                       sourceSquare, destinationSquare);
         if (!isQuiet) {
             cout << ssErr.str() << endl;
-            // TODO: Add info to error stream?
-            //cout << "This move leaves your King in check." << endl;
         }
         return false;
     }
     if (isQuiet) {
-        //TODO: Delete.
-        //cout << "Reversing pieces." << endl;
-        
         // Return pieces to their original positions.
         this->reverse(sourcePiece, destinationPiece,
                       sourceSquare, destinationSquare);
@@ -475,10 +383,6 @@ void ChessBoard::update(ChessPiece* sourcePiece,
                         ChessSquare& sourceSquare,
                         ChessSquare& destinationSquare) {
 
-    // TODO: Playing Out.
-    //cout << "Playing Out: " << *sourcePiece;
-    //cout << "  From: " << sourceSquare; 
-    //cout << "  To: " << destinationSquare << endl;
     this->board[destinationSquare] = sourcePiece;
     this->board[sourceSquare] = nullptr;
     sourcePiece->setSquare(destinationSquare);
@@ -500,10 +404,7 @@ void ChessBoard::reverse(ChessPiece* sourcePiece,
                          ChessPiece* destinationPiece,
                          ChessSquare& sourceSquare,
                          ChessSquare& destinationSquare) {
-    // TODO: Delete.
-    //cout << "Reversing: " << *sourcePiece;
-    //cout << "  Back From: " << destinationSquare; 
-    //cout << "  Back To: " << sourceSquare << endl;
+
     this->board[sourceSquare] = sourcePiece;
     this->board[destinationSquare] = destinationPiece;
     sourcePiece->setSquare(sourceSquare);
@@ -566,9 +467,6 @@ bool ChessBoard::isObstructed(ChessSquare& source,
     while (i != squares.end()) {
         BoardConstIterator j = this->board.find(*i);
         if (j->second != nullptr) {
-            // TODO: Remove the following two lines.
-            //cout << "Invalid move. Path blocked by "
-            //     << *(j->second) << endl;
             return true;
         }
         ++i;
@@ -593,21 +491,14 @@ void ChessBoard::updateKingSquare(ChessSquare& source,
 
 // Private Method: isInCheck
 // =========================
-// This method takes a Color and returns a pair<bool, ChessSquare>
-// with the first param indicating if the King of the given Color is in
-// check and if so, with the second param containing a ChessSquare from
-// which the King is being attacked. Note that if the King is not in
-// check, the second param will be the King's current ChessSquare.
-pair<bool, ChessSquare> ChessBoard::isInCheck(Color color) const {
+// This method takes a Color and returns a bool indicating
+// whether or not the King of the given Color is in check.
+bool ChessBoard::isInCheck(Color color) const {
 
     // Get this color's King's position.
     ChessSquare kingSquare = this->getKingSquare(color);
     BoardConstIterator i = this->board.find(kingSquare);
     ChessPiece* king = i->second;
-
-    // Define default return value. If the King is not in check,
-    // return its square as the second parameter in the response.
-    pair<bool, ChessSquare> rvalue(false, kingSquare);
 
     // Get all of the opponent's pieces that are still on the board,
     // i.e. whose square property is not nullptr, and see if any of
@@ -617,21 +508,15 @@ pair<bool, ChessSquare> ChessBoard::isInCheck(Color color) const {
     while (j != opponents->end()) {
         ChessPiece* opponent = *j;
         ChessSquare* opponentSquare = opponent->getSquare();
-        // TODO: Debug
-        //cout << *opponent << "   " << *opponentSquare << endl;
         if (opponentSquare != nullptr &&
             this->isPossibleMove(*opponentSquare, kingSquare,
                                  opponent, king)) {
-            //TODO: Debug
-            //cout << *opponent << *opponentSquare << endl;
-            rvalue.first = true;
-            rvalue.second = *opponentSquare;
-            return rvalue;
+            return true;
         }
         ++j;
     }
 
-    return rvalue;
+    return false;
 }
 
 // Public Method: resetBoard
@@ -731,8 +616,9 @@ void ChessBoard::print() const {
 }
 
 
-// Private Method: printMiddleLine
-// ===============================
+// Private Method: printTopLine
+// ============================
+// This method prints the top line of the ChessBoard.
 void ChessBoard::printTopLine() const {
     cout << "   " << "\u250C";
     for (short int i = 1; i <= 8; ++i) {
@@ -744,6 +630,8 @@ void ChessBoard::printTopLine() const {
 
 // Private Method: printMiddleLine
 // ===============================
+// This method prints one of the lines between
+// the middle rows of the ChessBoard.
 void ChessBoard::printMiddleLine() const {
     cout << "\u2502" << endl;
     cout << "   " << "\u251C";
@@ -756,6 +644,7 @@ void ChessBoard::printMiddleLine() const {
 
 // Private Method: printBottomLine
 // ===============================
+// This method prints the bottom line of the ChessBoard.
 void ChessBoard::printBottomLine() const {
     cout << "\u2502" << endl;
     cout << "   " << "\u2514";
