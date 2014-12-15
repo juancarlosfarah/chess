@@ -5,11 +5,14 @@
 // ==========================================
 
 #include "ChessPiece.hpp"
+#include "Settings.hpp"
 
-// Constructor:
-// ============
+// Constructor: Default
+// ====================
 ChessPiece::ChessPiece() {};
 
+// Constructor: Copy
+// =================
 ChessPiece::ChessPiece(const ChessPiece& other) {
     this->name = other.name;
     this->color = other.color;
@@ -17,20 +20,31 @@ ChessPiece::ChessPiece(const ChessPiece& other) {
     this->square = other.square;
 }
 
+// Constructor:
+// ============
+// This constructor takes a Color and a ChessSquare and
+// constructs a ChessPiece of that Color and sets its
+// square property to point to the given ChessSquare.
 ChessPiece::ChessPiece(Color c, const ChessSquare& square) : color(c) {
-    this->name = "Piece";
+    this->name = CHESS_PIECE_NAME;
     this->initSymbol(c);
     this->square = new ChessSquare(square);
 }
 
+// Constructor:
+// ============
+// This constructor takes a Color and creates
+// a ChessPiece object of that Color.
 ChessPiece::ChessPiece(Color c) : color(c) {
-    this->name = "Piece";
+    this->name = CHESS_PIECE_NAME;
     this->initSymbol(c);
     this->square = nullptr;
 }
 
 // Destructor:
 // ===========
+// This destructor ensures that the ChessSquare this ChessPiece
+// is pointing to is deleted before it is destructed.
 ChessPiece::~ChessPiece() {
     if (this->square != nullptr) {
         delete this->square;
@@ -39,15 +53,17 @@ ChessPiece::~ChessPiece() {
 }
 
 // Private Method: initSymbol
-// ============================
+// ==========================
+// This method initialises the symbol property
+// of the ChessPiece given its Color.
 void ChessPiece::initSymbol(Color color) {
-    this->symbol = (color == White) ? "W" : "B";
+    this->symbol = (color == White) ? WHITE_SYMBOL : BLACK_SYMBOL;
 }
 
 // Public Method: setSquare
 // ========================
-// Takes a ChessSquare and sets it as the
-// square attribute of this ChessPiece.
+// Takes a ChessSquare, creates a copy of that ChessSquare and sets
+// a pointer to it as the square attribute of this ChessPiece.
 void ChessPiece::setSquare(ChessSquare& square) {
     if (this->square != nullptr) {
         delete this->square;
@@ -57,8 +73,8 @@ void ChessPiece::setSquare(ChessSquare& square) {
 
 // Public Method: setSquare
 // ========================
-// Takes a ChessSquare and sets it as the
-// square attribute of this ChessPiece.
+// Takes a pointer to a ChessSquare and sets it
+// as the square property of this ChessPiece.
 void ChessPiece::setSquare(ChessSquare* square) {
     if (this->square != nullptr) {
         delete this->square;
@@ -68,13 +84,21 @@ void ChessPiece::setSquare(ChessSquare* square) {
 
 // Public Method: getSquare
 // ========================
-// Returns the square attribute of this ChessPiece.
+// This method returns the square property of this ChessPiece.
 ChessSquare* ChessPiece::getSquare() {
     return this->square;
 }
 
 // Public Method: isPossibleMove
 // =============================
+// This method takes a ChessSquare and a pointer to the ChessPiece
+// in that ChessSquare (or nullptr if its empty), and returns a
+// pair of booleans. The first bool indicates if the move is
+// possible given the rules of movement of each piece. The second
+// bool is true if the move requires the piece to go through one
+// or more squares. This indicates if the move needs to be checked
+// further by the ChessBoard for any potential obstructions. This
+// method is virtual and is overriden by each individual subclass.
 pair<bool, bool> ChessPiece::isPossibleMove(ChessSquare& square,
                                             ChessPiece* piece) const {
 
@@ -87,11 +111,6 @@ pair<bool, bool> ChessPiece::isPossibleMove(ChessSquare& square,
     if ((*(this->square) == square) ||
         ((piece != nullptr) && (piece->getColor() == this->color))) {
 
-        // TODO: Improve cout and remove invalid code.
-        // cout << "Invalid move." << endl;
-        if (piece != nullptr) {
-             //cout << *piece << " cannot attack " << *this << endl;
-        }
         rvalue.first = false;
     }
     return rvalue;
@@ -99,30 +118,35 @@ pair<bool, bool> ChessPiece::isPossibleMove(ChessSquare& square,
 
 // Public Method: getColor
 // =======================
-Color ChessPiece::getColor() {
+// This method returns the color property of the ChessPiece.
+Color ChessPiece::getColor() const {
     return this->color;
 }
 
 // Public Method: getSymbol
 // ========================
+// This method returns the symbol property of the ChessPiece.
 string ChessPiece::getSymbol() const {
     return this->symbol;
 }
 
 // Public Method: getName
 // ======================
-string ChessPiece::getName() {
+// This method returns the name property of the ChessPiece.
+string ChessPiece::getName() const {
     return this->name;
 }
 
 // Public Method: print
 // ====================
-void ChessPiece::print() {
+// This method prints the symbol property of the ChessPiece.
+void ChessPiece::print() const {
     cout << this->symbol;
 }
 
 // Friend Operator: <<
 // ===================
+// Outputs the symbol property of the ChessPiece operand.
 ostream& operator<<(ostream& os, const ChessPiece& piece) {
     os << piece.symbol;
     return os;
@@ -130,7 +154,8 @@ ostream& operator<<(ostream& os, const ChessPiece& piece) {
 
 // Operator: <<
 // ============
-// Define the insertion operator for Color.
+// The insertion operator for the Color enum
+// outputs the string name of the given Color.
 ostream& operator<<(ostream& os, const Color& color) {
     switch (color) {
         case White:
@@ -147,7 +172,8 @@ ostream& operator<<(ostream& os, const Color& color) {
 
 // Operator: !
 // ===========
-// Define the negation operator for Color.
+// The negation operator for the Color enum
+// returns the Color that is not the operand.
 Color operator!(const Color& color) {
     switch (color) {
         case White:
@@ -155,6 +181,7 @@ Color operator!(const Color& color) {
         case Black:
             return White;
     }
+
     // By default return White, but notify client
     // that there is a potential problem with Color.
     cout << "ERROR! Invalid Color. Returning White as "

@@ -8,15 +8,27 @@
 using namespace std;
 
 #include "Bishop.hpp"
+#include "Settings.hpp"
 
+// Constructor: Default
+// ====================
 Bishop::Bishop() : ChessPiece() {}
 
+// Constructor:
+// ============
+// This constructor takes a Color and creates a Bishop of that Color.
 Bishop::Bishop(Color color) : ChessPiece(color) {
-    this->name = "Bishop";
+    this->name = BISHOP_NAME;
     this->initSymbol(color);
 }
+
+// Constructor:
+// ============
+// This constructor takes a Color and a ChessSquare and
+// constructs a Bishop of that Color, setting its square
+// property to point to the given ChessSquare.
 Bishop::Bishop(Color c, const ChessSquare& cs) : ChessPiece(c, cs) {
-    this->name = "Bishop";
+    this->name = BISHOP_NAME;
     this->initSymbol(c);
 }
 
@@ -26,18 +38,22 @@ Bishop::~Bishop() {}
 
 // Private Method: initSymbol
 // ==========================
+// This method initialises the symbol
+// property of the Bishop given its Color.
 void Bishop::initSymbol(Color color) {
-    this->symbol = (color == White) ? "\u2657" : "\u265D";
+    this->symbol = (color == White) ? WHITE_BISHOP : BLACK_BISHOP;
 }
-
-// Public Method: getSymbol
-// ========================
-//string Bishop::getSymbol() {
-//    return this->symbol;
-//}
 
 // Public Method: isPossibleMove
 // =============================
+// This method takes a ChessSquare and a pointer to the ChessPiece
+// in that ChessSquare (or nullptr if its empty), and returns a
+// pair of booleans. The first bool indicates if the move is
+// possible given the rules of movement of the Bishop. The second
+// bool is true if the move requires the Bishop to go through one
+// or more squares. This indicates if the move needs to be checked
+// further by the ChessBoard for any potential obstructions.
+// This method is inherited from the ChessPiece superclass.
 pair<bool, bool> Bishop::isPossibleMove(ChessSquare& square,
                                         ChessPiece* piece) const {
 
@@ -63,6 +79,7 @@ pair<bool, bool> Bishop::isPossibleMove(ChessSquare& square,
 
 // Friend Operator: <<
 // ===================
+// Outputs the symbol property of the Bishop operand.
 ostream& operator<<(ostream& os, Bishop bishop) {
     os << bishop.symbol;
     return os;

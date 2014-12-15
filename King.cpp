@@ -8,15 +8,27 @@
 using namespace std;
 
 #include "King.hpp"
+#include "Settings.hpp"
 
+// Constructor: Default
+// ====================
 King::King() : ChessPiece() {}
 
+// Constructor:
+// ============
+// This constructor takes a Color and creates a King of that Color.
 King::King(Color color) : ChessPiece(color) {
-    this->name = "King";
+    this->name = KING_NAME;
     this->initSymbol(color);
 }
+
+// Constructor:
+// ============
+// This constructor takes a Color and a ChessSquare and
+// constructs a King of that Color, setting its square
+// property to point to the given ChessSquare.
 King::King(Color c, const ChessSquare& cs) : ChessPiece(c, cs) {
-    this->name = "King";
+    this->name = KING_NAME;
     this->initSymbol(c);
 }
 
@@ -26,20 +38,24 @@ King::~King() {}
 
 // Private Method: initSymbol
 // ==========================
+// This method initialises the symbol
+// property of the King given its Color.
 void King::initSymbol(Color color) {
-    this->symbol = (color == White) ? "\u2654" : "\u265A";
+    this->symbol = (color == White) ? WHITE_KING : BLACK_KING;
 }
-
-//// Public Method: getSymbol
-//// ========================
-//string King::getSymbol() {
-//    return this->symbol;
-//}
 
 // Public Method: isPossibleMove
 // =============================
+// This method takes a ChessSquare and a pointer to the ChessPiece
+// in that ChessSquare (or nullptr if its empty), and returns a
+// pair of booleans. The first bool indicates if the move is
+// possible given the rules of movement of the King. The second
+// bool is true if the move requires the King to go through one
+// or more squares. This indicates if the move needs to be checked
+// further by the ChessBoard for any potential obstructions.
+// This method is inherited from the ChessPiece superclass.
 pair<bool, bool> King::isPossibleMove(ChessSquare& square,
-                                   ChessPiece* piece) const {
+                                      ChessPiece* piece) const {
 
     // Initialise return value.
     pair<bool, bool> rvalue(false, false);
@@ -59,6 +75,7 @@ pair<bool, bool> King::isPossibleMove(ChessSquare& square,
 
 // Friend Operator: << 
 // ===================
+// Outputs the symbol property of the King operand.
 ostream& operator<<(ostream& os, King king) { 
     os << king.symbol;
     return os;

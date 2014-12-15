@@ -61,7 +61,7 @@ void ChessSet::initSide(Color color) {
         // its default position as set in Settings.hpp.
         ChessSquare square(file, rank);
         ChessPiece* piece = nullptr;
-        if (rank == B_PAWNS || rank == T_PAWNS) {
+        if (rank == WHITE_PAWNS || rank == BLACK_PAWNS) {
             piece = new Pawn(color, square);
         } else if (file == L_KNIGHT || file == R_KNIGHT) {
             piece = new Knight(color, square);

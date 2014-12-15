@@ -571,9 +571,9 @@ const ChessSquare ChessBoard::getKingStartSquare(Color color) const {
 
     switch (color) {
         case White:
-            return ChessSquare(WHITE_KING);
+            return ChessSquare(WHITE_KING_SQUARE);
         case Black:
-            return ChessSquare(BLACK_KING);
+            return ChessSquare(BLACK_KING_SQUARE);
     }
 
     // Default to returning White's King start ChessSquare,
@@ -581,7 +581,7 @@ const ChessSquare ChessBoard::getKingStartSquare(Color color) const {
     cout << "WARNING! Color argument to ChessBoard::getKingSquare did "
          << "not match Black or White. Check for possible corruption."
          << endl;
-    return ChessSquare(WHITE_KING);
+    return ChessSquare(WHITE_KING_SQUARE);
 }
 
 // Public Method: print
