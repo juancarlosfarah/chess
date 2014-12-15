@@ -144,7 +144,7 @@ void ChessBoard::switchTurns() {
 // e.g. "A1", and persists it on the Board if the move is valid.
 void ChessBoard::submitMove(string source, string destination) {
 
-    // Cannot submit any more moves if the game is over. Notify client.
+    // Cannot submit moves if the game is over. Notify and return.
     if (this->isGameOver) {
         cout << "Game is over. No more moves are allowed." << endl;
         return;
@@ -152,7 +152,7 @@ void ChessBoard::submitMove(string source, string destination) {
 
     // Get the location of the source ChessSquare on the Board,
     // but make sure to catch the exception if the source parameter
-    // does not correspond to a valid square.
+    // does not correspond to a valid square. If so, notify and return.
     BoardIterator i;
     try {
         ChessSquare square(source);
@@ -166,7 +166,7 @@ void ChessBoard::submitMove(string source, string destination) {
     }
 
     // If the source ChessSquare is valid but not on the board, then
-    // the ChessBoard might have been corrupted. Notify client.
+    // the Board might have been corrupted. Notify client and return.
     if (i == this->board.end()) {
         cout << "ERROR! Source ChessSquare is not on the board. It's "
              << "possible that this ChessBoard has been corrupted."
@@ -175,7 +175,7 @@ void ChessBoard::submitMove(string source, string destination) {
     }
 
     // Get ChessSquare and ChessPiece at provided source.
-    // Return false and notify client if the square is empty.
+    // Notify client and return if the square is empty.
     ChessSquare sourceSquare = i->first;
     ChessPiece* sourcePiece = i->second;
     if (i->second == nullptr) {
@@ -185,7 +185,7 @@ void ChessBoard::submitMove(string source, string destination) {
     }
 
     // If the piece in the source square is not of the same color as
-    // the player whose turn it is to play, notify and return false.
+    // the player whose turn it is to play, notify client and return.
     Color sourcePieceColor = sourcePiece->getColor();
     if (sourcePieceColor != this->turn) {
         cout << "It is not " << sourcePieceColor << "'s "
@@ -195,7 +195,7 @@ void ChessBoard::submitMove(string source, string destination) {
 
     // Get the location of the destination ChessSquare on the Board,
     // but make sure to catch the exception if the destination parameter
-    // does not correspond to a valid square.
+    // does not correspond to a valid square. If so, notify and return.
     BoardIterator j;
     try {
         ChessSquare square(destination);
@@ -209,7 +209,7 @@ void ChessBoard::submitMove(string source, string destination) {
     }
 
     // If the destination ChessSquare is valid but not on the board,
-    // then the ChessBoard might have been corrupted. Notify client.
+    // then the Board might have been corrupted. Notify and return.
     if (j == this->board.end()) {
         cout << "ERROR! Source ChessSquare is not on the board. It's "
              << "possible that this ChessBoard has been corrupted."
