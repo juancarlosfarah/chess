@@ -18,6 +18,7 @@ using namespace std;
 class InvalidCoordinatesException : public exception {
 
     private:
+
         const char* message;
 
     public:

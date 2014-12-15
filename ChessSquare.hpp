@@ -77,7 +77,7 @@ class ChessSquare {
 
         // Destructor:
         // ===========
-        ~ChessSquare();
+        virtual ~ChessSquare();
 
         // Method: getFile
         // ===============
