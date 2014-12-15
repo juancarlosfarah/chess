@@ -21,4 +21,4 @@ $(TEST): $(TEST_OBJ)
 -include $(OBJ:.o=.d)
 
 clean:
-	rm -f $(OBJ) $(INC) $(EXE)
+	rm -f $(OBJ) $(INC) $(EXE) $(TEST)
