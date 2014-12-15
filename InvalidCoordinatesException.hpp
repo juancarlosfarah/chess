@@ -7,6 +7,14 @@
 #include <exception>
 using namespace std;
 
+// Class: InvalidCoordinatesException
+// ==================================
+// This class extends the exception class to define
+// a specific exception that is designed to be thrown
+// whenever an operation in the Chess program fails
+// due to coordinates that are not valid. It is
+// implemented specifically in the ChessSquare constructor
+// in order to avoid constructing invalid ChessSquares.
 class InvalidCoordinatesException : public exception {
 
     private:
