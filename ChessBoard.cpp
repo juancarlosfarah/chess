@@ -588,14 +588,20 @@ const ChessSquare ChessBoard::getKingStartSquare(Color color) const {
 // ====================
 // This method prints out this ChessBoard in a human-friendly manner.
 void ChessBoard::print() const {
+
+    // Output a top line and prepare to iterate.
     this->printTopLine();
     int count = 0;
     BoardConstIterator i = this->board.begin();
     while (i != this->board.end()) {
+
+        // At the beginning of each rank output the rank number.
         if (count % SIDE_LEN == 0) {
             int rank = SIDE_LEN - (count / SIDE_LEN);
             cout << SMALL_SPACE << rank << SMALL_SPACE;
         }
+
+        // Output each square with its piece, if any.
         cout << VERTICAL_BAR << SMALL_SPACE;
         if (i->second != nullptr) {
             cout << *(i->second);
@@ -604,11 +610,15 @@ void ChessBoard::print() const {
         }
         cout << SMALL_SPACE;
         ++count;
+
+        // Between each row output a middle line.
         if (count % SIDE_LEN == 0 && count < NUM_SQUARES) {
             this->printMiddleLine();
         }
         ++i;
     }
+
+    // Output the bottom line, closing the board.
     this->printBottomLine();
 }
 
