@@ -1,3 +1,12 @@
+// ==========================================
+// File:    Settings.hpp
+// Author:  Juan Carlos Farah
+// Email:   juancarlos.farah14@imperial.ac.uk
+// ==========================================
+// This file runs a series of tests for
+// the chess program that ensure that it is
+// running correctly.
+
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -261,7 +270,11 @@ int main() {
     // Reset Board
     cb.resetBoard();
 
-    // Test Stalemate based on fastest known stalemate.
+    // Stalemate Test
+    // ==============
+    // Test stalemate based on fastest known stalemate.
+    cout << endl;
+    cout << "Testing stalemate..." << endl;
     cb.submitMove("E2","E3");
     cb.submitMove("A7","A5");
     cb.submitMove("D1","H5");
@@ -281,6 +294,176 @@ int main() {
     cb.submitMove("B8","C8");
     cb.submitMove("F7","G6");
     cb.submitMove("C8","E6");
+
+    // Checkmate Test 1
+    // ================
+    cout << endl;
+    cout << "Testing checkmate..." << endl;
+    cb.resetBoard();
+    cb.submitMove("A2","A4");
+    cb.submitMove("D7","D5");
+    cb.submitMove("A1","A3");
+    cb.submitMove("D8","D6");
+    cb.submitMove("B1","C3");
+    cb.submitMove("C8","G4");
+    cb.submitMove("A3","B3");
+    cb.submitMove("G7","G6");
+    cb.submitMove("E7","E5");
+    cb.submitMove("F2","F4");
+    cb.submitMove("E7","E5");
+    cb.submitMove("D2","D4");
+    cb.submitMove("F8","E6");
+    cb.submitMove("F8","E7");
+    cb.submitMove("E2","E4");
+    cb.submitMove("E7","H4");
+    cb.submitMove("G2","G3");
+    cb.submitMove("D6","C6");
+    cb.submitMove("H2","H3");
+    cb.submitMove("H4","H3");
+    cb.submitMove("H4","G3");
+    cb.submitMove("E1","D2");
+    cb.submitMove("C6","C4");
+    cb.submitMove("A4","A5");
+    cb.submitMove("C4","D4");
+    cb.submitMove("F1","D3");
+    cb.submitMove("B8","C6");
+    cb.submitMove("C3","D5");
+    cb.submitMove("C6","B4");
+    cb.submitMove("F4","F5");
+    cb.submitMove("B4","E4");
+    cb.submitMove("B4","D3");
+    cb.submitMove("B3","B6");
+    cb.submitMove("D3","C1");
+    cb.submitMove("D2","D1");
+    cb.submitMove("D2","C1");
+    cb.submitMove("A7","B6");
+    cb.submitMove("D5","C7");
+    cb.submitMove("D4","D1");
+    cb.submitMove("E8","E7");
+    cb.submitMove("D4","D1");
+    cb.submitMove("A5","B6");
+    cb.submitMove("D4","D1");
+
+    // Checkmate Test 2
+    // ================
+    cout << endl;
+    cout << "Testing checkmate..." << endl;
+    cb.resetBoard();
+    cb.submitMove("E2","E4");
+    cb.submitMove("F7","F5");
+    cb.submitMove("F1","B5");
+    cb.submitMove("D7","D6");
+    cb.submitMove("F5","E4");
+    cb.submitMove("B8","C6");
+    cb.submitMove("D1","H5");
+    cb.submitMove("B8","C6");
+    cb.submitMove("B8","C6");
+    cb.submitMove("B8","A6");
+    cb.submitMove("G7","G6");
+    cb.submitMove("H2","H4");
+    cb.submitMove("G8","H6");
+    cb.submitMove("H1","H3");
+    cb.submitMove("B8","C6");
+    cb.submitMove("D7","D5");
+    cb.submitMove("A2","A4");
+    cb.submitMove("D7","D5");
+    cb.submitMove("A2","A4");
+    cb.submitMove("D7","D5");
+    cb.submitMove("C2","C4");
+    cb.submitMove("D5","C4");
+    cb.submitMove("D2","D4");
+    cb.submitMove("C1","G5");
+    cb.submitMove("E7","E5");
+    cb.submitMove("D4","D5");
+    cb.submitMove("H6","G8");
+    cb.submitMove("D5","C6");
+    cb.submitMove("C1","G5");
+    cb.submitMove("A8","B8");
+    cb.submitMove("C6","B7");
+    cb.submitMove("C8","D7");
+    cb.submitMove("H3","G3");
+    cb.submitMove("B8","A8");
+    cb.submitMove("G3","G6");
+    cb.submitMove("G8","H6");
+    cb.submitMove("G6","E6");
+
+    // Checkmate Test 3
+    // ================
+    cout << endl;
+    cout << "Testing checkmate..." << endl;
+    cb.resetBoard();
+    cb.submitMove("E2","E4");
+    cb.submitMove("E7","E5");
+    cb.submitMove("F1","C4");
+    cb.submitMove("A7","A5");
+    cb.submitMove("D1","H5");
+    cb.submitMove("H7","H6");
+    cb.submitMove("H5","F7");
+
+    // This move should not be allows
+    // as the game is now over.
+    isValid = cb.submitMove("C7","C5");
+    assert(isValid == false);
+
+    // Testing Revealed Check
+    // ======================
+    cout << endl;
+    cout << "Testing revealed check..." << endl;
+    cb.resetBoard();
+    cb.submitMove("E2","E4");
+    cb.submitMove("D7","D6");
+    cb.submitMove("D1","G4");
+    cb.submitMove("A7","A6");
+    cb.submitMove("F2","F4");
+    cb.submitMove("A6","A5");
+    cb.submitMove("F4","F5");
+    cb.submitMove("E8","D7");
+    cb.submitMove("F5","F6");
+
+    // Replay opening of Lopez and da Cutri (1560)
+    // ===========================================
+    cout << endl;
+    cout << "Replaying opening of Lopez vs da Cutri..." << endl;
+    cb.resetBoard();
+    cb.submitMove("E2","E4");
+    cb.submitMove("E7","E5");
+    cb.submitMove("G1","F3");
+    cb.submitMove("F7","F6");
+    cb.submitMove("F3","E5");
+    cb.submitMove("F6","E5");
+    cb.submitMove("D1","H5");
+    cb.submitMove("G7","G6");
+    cb.submitMove("H5","E5");
+    cb.submitMove("H5","E5");
+    cb.submitMove("D8","E7");
+    cb.submitMove("E5","H8");
+    cb.submitMove("G8","F6");
+    cb.submitMove("D2","D4");
+    cb.submitMove("E8","F7");
+    cb.submitMove("F1","C4");
+    cb.submitMove("D7","D5");
+    cb.submitMove("C4","D5");
+    cb.submitMove("F6","D5");
+    cb.print();
+
+    // Hippopotamus Mate
+    // =================
+    cout << endl;
+    cout << "Testing the Hippopotamus Mate..." << endl;
+    cb.resetBoard();
+    cb.submitMove("E2","E4");
+    cb.submitMove("E7","E5");
+    cb.submitMove("G1","E2");
+    cb.submitMove("D8","H4");
+    cb.submitMove("B1","C3");
+    cb.submitMove("B8","C6");
+    cb.submitMove("G2","G3");
+    cb.submitMove("H4","G5");
+    cb.submitMove("D2","D4");
+    cb.submitMove("C6","D4");
+    cb.submitMove("C1","G5");
+    cb.submitMove("D4","F3");
+    cb.print();
 
     return 0;
 }
