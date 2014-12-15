@@ -400,7 +400,7 @@ int main() {
     cb.submitMove("H7","H6");
     cb.submitMove("H5","F7");
 
-    // This move should not be allows
+    // This move should not be allowed
     // as the game is now over.
     isValid = cb.submitMove("C7","C5");
     assert(isValid == false);
