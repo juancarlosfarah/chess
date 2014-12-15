@@ -51,7 +51,7 @@ void Knight::initSymbol(Color color) {
 // pair of booleans. The first bool indicates if the move is
 // possible given the rules of movement of the Knight. The second
 // bool is used to indicate if a piece might be blocking the path
-// of the Knight. Because Knights hop over squares, they cannot
+// of the Knight. Because a Knight hops over squares, it cannot
 // be blocked along the way. Hence that bool is always false.
 // This method is inherited from the ChessPiece superclass.
 pair<bool, bool> Knight::isPossibleMove(ChessSquare& square,
