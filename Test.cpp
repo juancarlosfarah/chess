@@ -1,5 +1,5 @@
 // ==========================================
-// File:    Settings.hpp
+// File:    Test.cpp
 // Author:  Juan Carlos Farah
 // Email:   juancarlos.farah14@imperial.ac.uk
 // ==========================================
