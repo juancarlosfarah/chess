@@ -21,6 +21,14 @@ int main() {
     ChessSquare cs('A', 1);
     ss << cs;
     assert(ss.str() == "A1");
+    ss.str("");
+
+    // Test case insensitivity for ChessSquare.
+    cout << "Testing constructing square h8..." << endl;
+    ChessSquare cs0("h8");
+    ss << cs0;
+    assert(ss.str() == "H8");
+    ss.str("");
 
     // ==============
     // Test Distances
@@ -257,6 +265,11 @@ int main() {
     cb.print();
     assert(bq->getSquare() == nullptr);
     assert(isValid == true);
+
+    // Test moving White Pawn F7 to E6.
+    isValid = cb.submitMove("F7","E6");
+    cb.print();
+    assert(isValid == false);
 
     // Reset Board
     cb.resetBoard();
