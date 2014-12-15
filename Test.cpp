@@ -275,8 +275,22 @@ int main() {
     assert(bq->getSquare() == nullptr);
     assert(isValid == true);
 
-    // Test moving White Pawn F7 to E6.
+    // Test moving Black Pawn F7 to E6.
     isValid = cb.submitMove("F7","E6");
+    cb.print();
+    assert(isValid == false);
+
+    // Test moving Black Rook H8 to H1.
+    // This ensures that pieces cannot
+    // wrap around the board.
+    isValid = cb.submitMove("H8","H1");
+    cb.print();
+    assert(isValid == false);
+
+    // Test moving Black Bishop C8 to H3.
+    // This ensures that pieces cannot
+    // wrap around the board.
+    isValid = cb.submitMove("C8","H3");
     cb.print();
     assert(isValid == false);
 
