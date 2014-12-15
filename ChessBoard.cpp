@@ -537,7 +537,7 @@ void ChessBoard::resetBoard() {
 
 // Public Method: getBoard
 // =======================
-// TODO: Delete.
+// This method returns the board property of the ChessBoard.
 Board ChessBoard::getBoard() const {
     return this->board;
 }

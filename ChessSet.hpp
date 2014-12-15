@@ -60,7 +60,7 @@ class ChessSet {
 
         // Destructor:
         // ===========
-        ~ChessSet();
+        virtual ~ChessSet();
 
         // Method: getSide
         // ===============

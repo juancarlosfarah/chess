@@ -28,6 +28,10 @@ class InvalidCoordinatesException : public exception {
             this->message = "Invalid coordinates!";
         }
 
+        // Destructor:
+        // ===========
+        virtual ~InvalidCoordinatesException() {}
+
         // Constructor:
         // ============
         // Takes a C-style string and constructs an

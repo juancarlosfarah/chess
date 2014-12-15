@@ -188,13 +188,13 @@ class ChessBoard {
 
         // Destructor:
         // ===========
-        ~ChessBoard();
+        virtual ~ChessBoard();
 
         // Method: submitMove
         // ==================
-        // Takes a source string and a destination string, presumably with
-        // chess coordinates of the form file followed by rank, e.g. "A1",
-        // "H4" and returns a bool indicating if the move is valid.
+        // Takes a source string and a destination string, presumably
+        // with chess coordinates of the form file followed by rank, e.g.
+        // "A1", "H4" and returns a bool indicating if the move is valid.
         bool submitMove(string source, string destination);
 
         // Method: resetBoard
@@ -202,9 +202,9 @@ class ChessBoard {
         // This method resets the chess board back to its initial state.
         void resetBoard();
    
-        // TODO: Delete.
         // Method: getBoard
         // ================
+        // This method returns the board property of the ChessBoard.
         Board getBoard() const;
 
         // Method: getKingSquare
