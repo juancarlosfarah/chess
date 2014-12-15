@@ -194,8 +194,8 @@ class ChessBoard {
         // ==================
         // Takes a source string and a destination string, presumably
         // with chess coordinates of the form file followed by rank, e.g.
-        // "A1", "H4" and returns a bool indicating if the move is valid.
-        bool submitMove(string source, string destination);
+        // "A1", "H4" and persists it on the Board if the move is valid.
+        void submitMove(string source, string destination);
 
         // Method: resetBoard
         // ==================

@@ -139,15 +139,15 @@ void ChessBoard::switchTurns() {
 
 // Public Method: submitMove
 // =========================
-// This method takes a source string and a destination string, presumably
-// with chess coordinates of the form file letter followed by rank number,
-// e.g. "A1", "H4" and returns a bool indicating if the move is valid.
-bool ChessBoard::submitMove(string source, string destination) {
+// Takes a source string and a destination string, presumably
+// with chess coordinates of the form file followed by rank,
+// e.g. "A1", and persists it on the Board if the move is valid.
+void ChessBoard::submitMove(string source, string destination) {
 
     // Cannot submit any more moves if the game is over. Notify client.
     if (this->isGameOver) {
         cout << "Game is over. No more moves are allowed." << endl;
-        return false;
+        return;
     }
 
     // Get the location of the source ChessSquare on the Board,
@@ -162,7 +162,7 @@ bool ChessBoard::submitMove(string source, string destination) {
              << "ChessSquare constructor for source ChessSquare with "
              << "input=" << source << " in ChessBoard::submitMove."
              << endl;
-        return false;
+        return;
     }
 
     // If the source ChessSquare is valid but not on the board, then
@@ -171,7 +171,7 @@ bool ChessBoard::submitMove(string source, string destination) {
         cout << "ERROR! Source ChessSquare is not on the board. It's "
              << "possible that this ChessBoard has been corrupted."
              << endl;
-        return false;
+        return;
     }
 
     // Get ChessSquare and ChessPiece at provided source.
@@ -181,7 +181,7 @@ bool ChessBoard::submitMove(string source, string destination) {
     if (i->second == nullptr) {
         cout << "There is no piece at position "
              << sourceSquare << "!" << endl;
-        return false;
+        return;
     }
 
     // If the piece in the source square is not of the same color as
@@ -190,7 +190,7 @@ bool ChessBoard::submitMove(string source, string destination) {
     if (sourcePieceColor != this->turn) {
         cout << "It is not " << sourcePieceColor << "'s "
              << "turn to move!" << endl;
-        return false;
+        return;
     }
 
     // Get the location of the destination ChessSquare on the Board,
@@ -205,7 +205,7 @@ bool ChessBoard::submitMove(string source, string destination) {
              << "ChessSquare constructor for destination ChessSquare with "
              << "input=" << destination << " in ChessBoard::submitMove."
              << endl;
-        return false;
+        return;
     }
 
     // If the destination ChessSquare is valid but not on the board,
@@ -214,7 +214,7 @@ bool ChessBoard::submitMove(string source, string destination) {
         cout << "ERROR! Source ChessSquare is not on the board. It's "
              << "possible that this ChessBoard has been corrupted."
              << endl;
-        return false;
+        return;
     }
 
     // Get ChessSquare and ChessPiece at destination square. The
@@ -225,10 +225,10 @@ bool ChessBoard::submitMove(string source, string destination) {
     // This stream will be used to inform the client of a valid move.
     stringstream ssSuccess;
 
-    // Ensure the move is valid.
+    // Ensure the move is valid, else return.
     if (!this->isValidMove(sourceSquare, destinationSquare, sourcePiece,
                            destinationPiece, ssSuccess, false)) {
-        return false;
+        return;
     }
 
     // If the opponent is now in check or checkmate, or if the game has
@@ -262,7 +262,6 @@ bool ChessBoard::submitMove(string source, string destination) {
     // Signal that it's the other player's turn now if the game goes on.
     if (!this->isGameOver) this->switchTurns();
 
-    return true;
 }
 
 // Private Method: hasValidMove
