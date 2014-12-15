@@ -8,6 +8,7 @@
 #include <sstream>
 using namespace std;
 
+#include "Settings.hpp"
 #include "ChessBoard.hpp"
 
 // Constructor: Default
@@ -41,8 +42,8 @@ void ChessBoard::init() {
     // Initialise the Board so that each entry corresponds to a
     // empty ChessSquare. Signal that the Board is empty by assigning
     // all squares in the map a nullptr as a value.
-    for (int i = 'A'; i <= 'H'; ++i) {
-        for (int rank = 1; rank <= 8; ++rank) {
+    for (int i = LEFTMOST_FILE; i <= RIGHTMOST_FILE; ++i) {
+        for (int rank = BOTTOM_RANK; rank <= TOP_RANK; ++rank) {
             char file = static_cast<char>(i);
 
             // Prevent inserting corrupted ChessSquare objects by
@@ -568,15 +569,11 @@ const ChessSquare ChessBoard::getKingSquare(Color color) const {
 // King of that Color starts by default.
 const ChessSquare ChessBoard::getKingStartSquare(Color color) const {
 
-    // These are the default starting squares.
-    const string whiteDefault = "E1";
-    const string blackDefault = "E8";
-
     switch (color) {
         case White:
-            return ChessSquare(whiteDefault);
+            return ChessSquare(WHITE_KING);
         case Black:
-            return ChessSquare(blackDefault);
+            return ChessSquare(BLACK_KING);
     }
 
     // Default to returning White's King start ChessSquare,
@@ -584,7 +581,7 @@ const ChessSquare ChessBoard::getKingStartSquare(Color color) const {
     cout << "WARNING! Color argument to ChessBoard::getKingSquare did "
          << "not match Black or White. Check for possible corruption."
          << endl;
-    return ChessSquare(whiteDefault);
+    return ChessSquare(WHITE_KING);
 }
 
 // Public Method: print
@@ -595,19 +592,19 @@ void ChessBoard::print() const {
     int count = 0;
     BoardConstIterator i = this->board.begin();
     while (i != this->board.end()) {
-        if (count % 8 == 0) {
-            int rank = 8 - (count / 8);
-            cout << " " << rank << " ";
+        if (count % SIDE_LEN == 0) {
+            int rank = SIDE_LEN - (count / SIDE_LEN);
+            cout << SMALL_SPACE << rank << SMALL_SPACE;
         }
-        cout << "\u2502 ";
+        cout << VERTICAL_BAR << SMALL_SPACE;
         if (i->second != nullptr) {
             cout << *(i->second);
         } else {
-            cout << " ";
+            cout << SMALL_SPACE;
         }
-        cout << " ";
+        cout << SMALL_SPACE;
         ++count;
-        if (count % 8 == 0 && count < 64) {
+        if (count % SIDE_LEN == 0 && count < NUM_SQUARES) {
             this->printMiddleLine();
         }
         ++i;
@@ -620,12 +617,12 @@ void ChessBoard::print() const {
 // ============================
 // This method prints the top line of the ChessBoard.
 void ChessBoard::printTopLine() const {
-    cout << "   " << "\u250C";
-    for (short int i = 1; i <= 8; ++i) {
-        cout << "\u2500\u2500\u2500";
-        if (i != 8) cout << "\u252C";
+    cout << LARGE_SPACE << TOP_LEFT_CORNER;
+    for (short int i = 1; i <= SIDE_LEN; ++i) {
+        cout << LONG_BAR;
+        if (i != SIDE_LEN) cout << TOP_JOIN;
     }
-    cout << "\u2510" << endl;
+    cout << TOP_RIGHT_CORNER << endl;
 }
 
 // Private Method: printMiddleLine
@@ -633,30 +630,34 @@ void ChessBoard::printTopLine() const {
 // This method prints one of the lines between
 // the middle rows of the ChessBoard.
 void ChessBoard::printMiddleLine() const {
-    cout << "\u2502" << endl;
-    cout << "   " << "\u251C";
-    for (short int i = 1; i <= 8; ++i) {
-        cout << "\u2500\u2500\u2500";
-        if (i != 8) cout << "\u253C";
+    cout << VERTICAL_BAR << endl;
+    cout << LARGE_SPACE << LEFT_JOIN;
+    for (short int i = 1; i <= SIDE_LEN; ++i) {
+        cout << LONG_BAR;
+        if (i != SIDE_LEN) cout << INNER_JOIN;
     }
-    cout << "\u2524" << endl;
+    cout << RIGHT_JOIN << endl;
 }
 
 // Private Method: printBottomLine
 // ===============================
 // This method prints the bottom line of the ChessBoard.
 void ChessBoard::printBottomLine() const {
-    cout << "\u2502" << endl;
-    cout << "   " << "\u2514";
-    for (short int i = 1; i <= 8; ++i) {
-        cout << "\u2500\u2500\u2500";
-        if (i != 8) cout << "\u2534";
+
+    // Close the bottom rank with the appropriate characters.
+    cout << VERTICAL_BAR << endl;
+    cout << LARGE_SPACE << BOTTOM_LEFT_CORNER;
+    for (short int i = 1; i <= SIDE_LEN; ++i) {
+        cout << LONG_BAR;
+        if (i != 8) cout << BOTTOM_JOIN;
     }
-    cout << "\u2518" << endl;
-    string files = "ABCDEFGH";
-    cout << "  ";
-    for (char file : files) {
-        cout << "   " << file;
+    cout << BOTTOM_RIGHT_CORNER << endl;
+
+    // Output the letter of each file below the board.
+    cout << MEDIUM_SPACE;
+    for (int i = 0; i < SIDE_LEN; ++i) {
+        char file = LEFTMOST_FILE + i;
+        cout << LARGE_SPACE << file;
     }
     cout << endl;
 }

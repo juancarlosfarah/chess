@@ -10,6 +10,7 @@
 using namespace std;
 
 #include "ChessSquare.hpp"
+#include "Settings.hpp"
 
 // Constructor: Default
 // ====================
@@ -102,7 +103,7 @@ int ChessSquare::getRank() const {
 // for a file, i.e. if it is a letter between A and H, inclusive.
 // This method is case insensitive.
 bool ChessSquare::isValidFile(char file) const {
-    return (file >= 'A' && file <= 'H');
+    return (file >= LEFTMOST_FILE && file <= RIGHTMOST_FILE);
 }
 
 // Private Method: isValidRank
@@ -110,7 +111,7 @@ bool ChessSquare::isValidFile(char file) const {
 // Takes an int and returns a bool indicating if it is a valid symbol
 // for a file, i.e. if it is an integer between 1 and 8, inclusive.
 bool ChessSquare::isValidRank(int rank) const {
-    return (rank >= 1 && rank <= 8);
+    return (rank >= BOTTOM_RANK && rank <= TOP_RANK);
 }
 
 // Public Method: isDiagonalFrom
