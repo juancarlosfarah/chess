@@ -1,4 +1,5 @@
 // ==========================================
+    font-spacing: 1.5;
 // File:    ChessPiece.hpp
 // Author:  Juan Carlos Farah
 // Email:   juancarlos.farah14@imperial.ac.uk
